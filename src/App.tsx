@@ -8,17 +8,32 @@ import {
   Divider,
   notification 
 } from 'antd'
+import { useTranslation } from 'react-i18next'
+import { useAppContext } from './hooks/useAppContext'
+import UserProfile from './components/UserProfile'
 
 const { Header, Content, Footer } = Layout
 const { Title, Paragraph } = Typography
 
 function App() {
+  const { t } = useTranslation()
+  const { language } = useAppContext()
   const [count, setCount] = useState(0)
 
   const showNotification = () => {
     notification.success({
-      message: 'Success!',
-      description: 'Ant Design is working perfectly!',
+      message: t('notifications.success'),
+      description: t('notifications.successDescription'),
+      placement: 'topRight',
+    })
+  }
+
+  const showLanguageChangeNotification = () => {
+    notification.info({
+      message: t('notifications.languageChanged'),
+      description: t('notifications.languageChangedDescription', { 
+        language: t(`languages.${language === 'en' ? 'english' : 'arabic'}`) 
+      }),
       placement: 'topRight',
     })
   }
@@ -27,12 +42,16 @@ function App() {
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ 
         display: 'flex', 
+        justifyContent: 'space-between',
         alignItems: 'center',
-        background: '#001529'
+        background: '#001529',
+        padding: '0 24px'
       }}>
         <Title level={3} style={{ color: 'white', margin: 0 }}>
-          Invigilator Assessment Hub
+          {t('title')}
         </Title>
+        
+        <UserProfile />
       </Header>
 
       <Content style={{ padding: '50px', background: '#f0f2f5' }}>
@@ -40,23 +59,22 @@ function App() {
           <Card>
             <Space direction="vertical" size="large" style={{ width: '100%' }}>
               <div style={{ textAlign: 'center' }}>
-                <Title level={2}>Welcome to React + Ant Design</Title>
+                <Title level={2}>{t('welcome.title')}</Title>
                 <Paragraph>
-                  Your project is now configured with Ant Design components.
-                  Click the buttons below to test the integration.
+                  {t('welcome.description')}
                 </Paragraph>
               </div>
 
-              <Divider>Interactive Demo</Divider>
+              <Divider>{t('demo.title')}</Divider>
 
               <div style={{ textAlign: 'center' }}>
-                <Space size="middle">
+                <Space size="middle" wrap>
                   <Button 
                     type="primary" 
                     size="large"
                     onClick={() => setCount(count + 1)}
                   >
-                    Count: {count}
+                    {t('demo.countButton', { count })}
                   </Button>
                   
                   <Button 
@@ -64,15 +82,23 @@ function App() {
                     size="large"
                     onClick={showNotification}
                   >
-                    Show Notification
+                    {t('demo.notificationButton')}
+                  </Button>
+
+                  <Button 
+                    type="dashed" 
+                    size="large"
+                    onClick={showLanguageChangeNotification}
+                  >
+                    Test Language Notification
                   </Button>
                 </Space>
               </div>
 
-              <Divider>Ready to Build</Divider>
+              <Divider>{t('demo.readyTitle')}</Divider>
               
               <Paragraph style={{ textAlign: 'center' }}>
-                Edit <code>src/App.tsx</code> and start building your assessment hub!
+                {t('welcome.editMessage')}
               </Paragraph>
             </Space>
           </Card>
@@ -80,7 +106,7 @@ function App() {
       </Content>
 
       <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>
-        Invigilator Assessment Hub ©2024 - Built with React & Ant Design
+        {t('footer')}
       </Footer>
     </Layout>
   )

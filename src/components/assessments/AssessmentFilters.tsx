@@ -56,7 +56,7 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
       borderRadius: '8px 8px 0 0'
     }}>
       <Row gutter={[16, 16]} align="middle">
-        <Col xs={24} sm={12} md={6} lg={6}>
+        <Col xs={24} sm={12} md={12} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -83,7 +83,7 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
           </div>
         </Col>
 
-        <Col xs={24} sm={12} md={6} lg={6}>
+        <Col xs={24} sm={12} md={12} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -110,7 +110,7 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
           </div>
         </Col>
 
-        <Col xs={24} sm={12} md={6} lg={6}>
+        <Col xs={24} sm={12} md={12} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -137,7 +137,7 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
           </div>
         </Col>
 
-        <Col xs={24} sm={12} md={6} lg={6}>
+        <Col xs={24} sm={12} md={12} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -166,7 +166,7 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
       </Row>
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} sm={12} md={8}>
+        <Col xs={24} sm={16} md={12} lg={8}>
           <Input
             placeholder="Search assessments..."
             value={filters.searchTerm}
@@ -177,11 +177,12 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
         </Col>
         
         {hasActiveFilters && (
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={8} md={6} lg={4}>
             <Button
               icon={<ClearOutlined />}
               onClick={onClearFilters}
               disabled={loading}
+              style={{ width: '100%' }}
             >
               Clear Filters
             </Button>

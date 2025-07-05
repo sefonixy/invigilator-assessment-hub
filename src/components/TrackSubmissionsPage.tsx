@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Breadcrumb, message } from 'antd';
+import { Typography, Breadcrumb, message, Alert } from 'antd';
 import { HomeOutlined, FileTextOutlined } from '@ant-design/icons';
 import SubmissionsFilter from './submissions/SubmissionsFilter';
 import SubmissionsTable from './submissions/SubmissionsTable';
@@ -17,6 +17,8 @@ const TrackSubmissionsPage: React.FC = () => {
   const [filteredExaminees, setFilteredExaminees] = useState<Examinee[]>([]);
   const [selectedExaminee, setSelectedExaminee] = useState<Examinee | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [actionModal, setActionModal] = useState<{
     visible: boolean;
     type: 'paper' | 'unlock' | 'restart' | null;
@@ -34,13 +36,37 @@ const TrackSubmissionsPage: React.FC = () => {
   });
 
   useEffect(() => {
-    if (examId) {
-      const foundAssessment = mockAssessmentsData.find(a => a.id === examId);
-      if (foundAssessment) {
-        setAssessment(foundAssessment);
-        setFilteredExaminees(foundAssessment.examinees);
+    const loadAssessmentData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Simulate potential API failure (5% chance)
+        if (Math.random() < 0.05) {
+          throw new Error('Failed to load assessment data');
+        }
+        
+        if (examId) {
+          const foundAssessment = mockAssessmentsData.find(a => a.id === examId);
+          if (foundAssessment) {
+            setAssessment(foundAssessment);
+            setFilteredExaminees(foundAssessment.examinees);
+          } else {
+            setError('Assessment not found');
+          }
+        }
+      } catch (err) {
+        setError('Failed to load data. Please try again later.');
+        console.error('Error loading assessment:', err);
+      } finally {
+        setLoading(false);
       }
-    }
+    };
+
+    loadAssessmentData();
   }, [examId]);
 
 
@@ -75,6 +101,11 @@ const TrackSubmissionsPage: React.FC = () => {
       }
     }
     
+    // Apply group filter (TreeSelect value)
+    if (newFilters.groupName) {
+      filtered = filtered.filter(e => e.groupName === newFilters.groupName);
+    }
+
     if (newFilters.examineeSearch) {
       const search = newFilters.examineeSearch.toLowerCase();
       filtered = filtered.filter(e => 
@@ -175,10 +206,60 @@ const TrackSubmissionsPage: React.FC = () => {
     });
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+        <div style={{ padding: '24px', textAlign: 'center' }}>
+          <Text>Loading assessment data...</Text>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+        <div style={{ padding: '24px' }}>
+          <Alert
+            message="Error Loading Data"
+            description={error}
+            type="error"
+            showIcon
+            action={
+              <button 
+                onClick={() => window.location.reload()} 
+                style={{
+                  background: 'none',
+                  border: '1px solid #ff4d4f',
+                  color: '#ff4d4f',
+                  padding: '4px 12px',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Retry
+              </button>
+            }
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Assessment not found state
   if (!assessment) {
     return (
-      <div style={{ padding: '20px' }}>
-        <Text>Assessment not found</Text>
+      <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+        <div style={{ padding: '24px' }}>
+          <Alert
+            message="Assessment Not Found"
+            description="The requested assessment could not be found."
+            type="warning"
+            showIcon
+          />
+        </div>
       </div>
     );
   }
@@ -216,15 +297,15 @@ const TrackSubmissionsPage: React.FC = () => {
               title: `${assessment.assessmentName} - Submissions`,
             },
           ]}
-          style={{ fontSize: '14px' }}
-        />
-      </div>
+                  style={{ fontSize: '14px' }}
+      />
+    </div>
 
-      <div style={{ padding: '24px' }}>
+    <div style={{ padding: window.innerWidth < 768 ? '16px' : '24px' }}>
 
 
 
-        {/* Filters */}
+      {/* Filters */}
         <SubmissionsFilter
           onFilterChange={handleFilterChange}
           filters={filters}

@@ -9,6 +9,7 @@ interface AssessmentTableProps {
   onAction: (action: string, assessment: Assessment) => void;
   selectedRowKeys: string[];
   onSelectionChange: (selectedKeys: string[]) => void;
+  syncingAssessments?: Set<string>;
 }
 
 const AssessmentTable: React.FC<AssessmentTableProps> = ({
@@ -16,7 +17,8 @@ const AssessmentTable: React.FC<AssessmentTableProps> = ({
   loading = false,
   onAction,
   selectedRowKeys,
-  onSelectionChange
+  onSelectionChange,
+  syncingAssessments = new Set()
 }) => {
 
   const getStatusColor = (status: string) => {
@@ -117,10 +119,12 @@ const AssessmentTable: React.FC<AssessmentTableProps> = ({
         <Space>
           <Button
             type="link"
-            icon={<SyncOutlined />}
+            icon={<SyncOutlined spin={syncingAssessments.has(record.id)} />}
             onClick={() => onAction('sync_submissions', record)}
+            loading={syncingAssessments.has(record.id)}
+            disabled={syncingAssessments.has(record.id)}
           >
-            Sync Submissions
+            {syncingAssessments.has(record.id) ? 'Syncing...' : 'Sync Submissions'}
           </Button>
         </Space>
       )

@@ -135,6 +135,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       title: 'Username',
       dataIndex: 'username',
       key: 'username',
+      sorter: (a: Examinee, b: Examinee) => a.username.localeCompare(b.username),
       render: (text: string, record: Examinee) => (
         <Button 
           type="link" 
@@ -149,6 +150,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       title: 'Full Name',
       dataIndex: 'fullName',
       key: 'fullName',
+      sorter: (a: Examinee, b: Examinee) => a.fullName.localeCompare(b.fullName),
       render: (text: string) => <span style={{ fontWeight: 500 }}>{text}</span>
     },
     {
@@ -192,6 +194,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       dataIndex: 'questionsSynced',
       key: 'questionsSynced',
       align: 'center' as const,
+      sorter: (a: Examinee, b: Examinee) => a.questionsSynced - b.questionsSynced,
       render: (synced: number) => (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ marginRight: '8px' }}>{synced}/20</span>
@@ -204,6 +207,15 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       dataIndex: 'timeElapsed',
       key: 'timeElapsed',
       align: 'center' as const,
+      sorter: (a: Examinee, b: Examinee) => {
+        // Convert time strings to minutes for sorting
+        const timeToMinutes = (timeStr: string) => {
+          if (timeStr === 'N/A') return -1;
+          const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+          return hours * 60 + minutes + seconds / 60;
+        };
+        return timeToMinutes(a.timeElapsed) - timeToMinutes(b.timeElapsed);
+      },
       render: (time: string) => (
         <div style={{ 
           fontFamily: 'monospace', 
@@ -221,6 +233,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       dataIndex: 'status',
       key: 'status',
       align: 'center' as const,
+      sorter: (a: Examinee, b: Examinee) => a.status.localeCompare(b.status),
       render: (status: string) => (
         <Tag color={getStatusColor(status)}>{status}</Tag>
       )
@@ -273,7 +286,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
           showTotal: (total, range) => 
             `${range[0]}-${range[1]} of ${total} examinees`
         }}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 1200 }}
         size="middle"
       />
     </div>

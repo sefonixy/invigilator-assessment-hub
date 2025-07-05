@@ -46,6 +46,9 @@ export interface Assessment {
   assessmentEndDate: string;
   assessmentStatus: AssessmentStatus;
   
+  // Total count of enrolled examinees (for display purposes)
+  examineeCount: number;
+  
   // Contains the list of all examinees for this assessment
   examinees: Examinee[];
 } 

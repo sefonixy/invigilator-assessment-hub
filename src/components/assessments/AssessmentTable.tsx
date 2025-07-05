@@ -1,6 +1,6 @@
 import React from 'react';
-import { Table, Tag, Button, Space } from 'antd';
-import { EyeOutlined, SyncOutlined } from '@ant-design/icons';
+import { Table, Tag, Button, Space, Tooltip } from 'antd';
+import { SyncOutlined, UserOutlined } from '@ant-design/icons';
 import type { Assessment } from '../../types/data';
 
 interface AssessmentTableProps {
@@ -100,16 +100,85 @@ const AssessmentTable: React.FC<AssessmentTableProps> = ({
       title: 'Monitor Examinees',
       key: 'monitor',
       align: 'center' as const,
-      render: (_: unknown, record: Assessment) => (
-        <Button
-          type="link"
-          icon={<EyeOutlined />}
-          onClick={() => onAction('monitor_examinees', record)}
-          disabled={record.examinees.length === 0}
-        >
-          Monitor Examinees
-        </Button>
-      )
+      render: (_: unknown, record: Assessment) => {
+        const examineeCount = record.examineeCount;
+        
+        const commonStyles = {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '8px 16px',
+          borderRadius: '6px',
+          minWidth: '80px',
+          height: '36px',
+          fontWeight: 600,
+          fontSize: '16px',
+          border: '1px solid',
+          textAlign: 'center' as const,
+          verticalAlign: 'middle' as const
+        };
+
+        if (examineeCount === 0) {
+          return (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Tooltip title="No examinees enrolled">
+                <div style={{
+                  ...commonStyles,
+                  backgroundColor: '#f5f5f5',
+                  color: '#999',
+                  borderColor: '#e8e8e8',
+                  cursor: 'not-allowed'
+                }}>
+                  <UserOutlined style={{ marginRight: 8, fontSize: '16px', color: '#999' }} />
+                  <span>0</span>
+                </div>
+              </Tooltip>
+            </div>
+          );
+        }
+        
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Tooltip title={`Monitor ${examineeCount} examinee${examineeCount > 1 ? 's' : ''}`}>
+              <Button
+                type="default"
+                style={{
+                  ...commonStyles,
+                  backgroundColor: '#e6f7ff',
+                  borderColor: '#91d5ff',
+                  color: '#1890ff',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onClick={() => onAction('monitor_examinees', record)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#bae7ff';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(24, 144, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#e6f7ff';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <UserOutlined style={{ 
+                  marginRight: 8, 
+                  fontSize: '16px',
+                  color: '#1890ff'
+                }} />
+                <span style={{ 
+                  fontSize: '16px', 
+                  fontWeight: 600,
+                  color: '#1890ff'
+                }}>
+                  {examineeCount}
+                </span>
+              </Button>
+            </Tooltip>
+          </div>
+        );
+      }
     },
     {
       title: 'Action',

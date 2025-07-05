@@ -10,6 +10,7 @@ export const mockAssessmentsData: Assessment[] = [
     assessmentStartDate: '2024-03-15T10:00:00Z',
     assessmentEndDate: '2024-03-15T12:00:00Z',
     assessmentStatus: 'Completed',
+    examineeCount: 48,
     examinees: [
       {
         id: 'EX01',
@@ -127,6 +128,7 @@ export const mockAssessmentsData: Assessment[] = [
     assessmentStartDate: '2024-05-20T15:00:00Z',
     assessmentEndDate: '2024-05-20T17:00:00Z',
     assessmentStatus: 'Scheduled',
+    examineeCount: 19,
     examinees: [
       {
         id: 'EX03',
@@ -169,6 +171,7 @@ export const mockAssessmentsData: Assessment[] = [
     assessmentStartDate: '2024-04-10T12:00:00Z',
     assessmentEndDate: '2024-04-10T14:00:00Z',
     assessmentStatus: 'In Progress',
+    examineeCount: 92,
     examinees: [
       {
         id: 'EX05',
@@ -198,6 +201,7 @@ export const mockAssessmentsData: Assessment[] = [
     assessmentStartDate: '2024-06-05T16:00:00Z',
     assessmentEndDate: '2024-06-05T18:00:00Z',
     assessmentStatus: 'Completed',
+    examineeCount: 75,
     examinees: []
   },
   {
@@ -209,6 +213,7 @@ export const mockAssessmentsData: Assessment[] = [
     assessmentStartDate: '2024-07-12T13:00:00Z',
     assessmentEndDate: '2024-07-12T15:00:00Z',
     assessmentStatus: 'Scheduled',
+    examineeCount: 0,
     examinees: []
   }
 ]; 

@@ -3,7 +3,6 @@ import { Avatar, Dropdown, Button, Switch, Select } from 'antd';
 import type { MenuProps } from 'antd';
 import { 
   UserOutlined, 
-  SettingOutlined, 
   LogoutOutlined,
   DownOutlined,
   SunOutlined,
@@ -12,9 +11,7 @@ import {
   CompressOutlined,
   GlobalOutlined
 } from '@ant-design/icons';
-import { useTranslation } from 'react-i18next';
 import ProfileModal from './ProfileModal';
-import SettingsModal from './SettingsModal';
 import { useAppContext } from '../hooks/useAppContext';
 
 // Demo profile data - in a real app, this would come from your state management
@@ -30,7 +27,6 @@ const defaultProfileData = {
 };
 
 const UserProfile: React.FC = () => {
-  const { t } = useTranslation();
   const { 
     themeMode, 
     language, 
@@ -42,7 +38,6 @@ const UserProfile: React.FC = () => {
     isCompact
   } = useAppContext();
   const [profileModalOpen, setProfileModalOpen] = useState(false);
-  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   const getInitials = () => {
     return `${defaultProfileData.firstName[0]}${defaultProfileData.lastName[0]}`;
@@ -59,20 +54,10 @@ const UserProfile: React.FC = () => {
       icon: <UserOutlined />,
       label: (
         <span style={{ fontSize: isCompact ? '13px' : '14px' }}>
-          {t('profile.viewProfile')}
+          View Profile
         </span>
       ),
       onClick: () => setProfileModalOpen(true),
-    },
-    {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: (
-        <span style={{ fontSize: isCompact ? '13px' : '14px' }}>
-          {t('profile.settings')}
-        </span>
-      ),
-      onClick: () => setSettingsModalOpen(true),
     },
     {
       type: 'divider',
@@ -87,7 +72,7 @@ const UserProfile: React.FC = () => {
           alignItems: 'center',
           fontSize: isCompact ? '13px' : '14px'
         }}>
-          <span>{isDark ? t('profile.lightMode') : t('profile.darkMode')}</span>
+          <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
           <Switch
             size={isCompact ? 'small' : 'default'}
             checked={isDark}
@@ -111,7 +96,7 @@ const UserProfile: React.FC = () => {
           alignItems: 'center',
           fontSize: isCompact ? '13px' : '14px'
         }}>
-          <span>{isCompact ? t('profile.comfortableMode') : t('profile.compactMode')}</span>
+          <span>{isCompact ? 'Comfortable Mode' : 'Compact Mode'}</span>
           <Switch
             size={isCompact ? 'small' : 'default'}
             checked={isCompact}
@@ -135,7 +120,7 @@ const UserProfile: React.FC = () => {
           alignItems: 'center',
           fontSize: isCompact ? '13px' : '14px'
         }}>
-          <span>{t('profile.language')}</span>
+          <span>Language</span>
           <Select
             value={language}
             onChange={changeLanguage}
@@ -162,7 +147,7 @@ const UserProfile: React.FC = () => {
           color: '#ff4d4f',
           fontSize: isCompact ? '13px' : '14px'
         }}>
-          {t('profile.logout')}
+          Logout
         </span>
       ),
       onClick: handleLogout,
@@ -220,7 +205,7 @@ const UserProfile: React.FC = () => {
               fontSize: isCompact ? '11px' : '12px',
               opacity: 0.8 
             }}>
-              {t(`profile.roles.${defaultProfileData.role}`)}
+              Instructor
             </span>
           </div>
           <DownOutlined style={{ 
@@ -234,11 +219,6 @@ const UserProfile: React.FC = () => {
         open={profileModalOpen}
         onClose={() => setProfileModalOpen(false)}
         profileData={defaultProfileData}
-      />
-      
-      <SettingsModal
-        open={settingsModalOpen}
-        onClose={() => setSettingsModalOpen(false)}
       />
     </>
   );

@@ -1,22 +1,31 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Typography, Row, Col, Statistic, Button, Space } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Typography, Breadcrumb, message } from 'antd';
+import { HomeOutlined, FileTextOutlined } from '@ant-design/icons';
 import SubmissionsFilter from './submissions/SubmissionsFilter';
 import SubmissionsTable from './submissions/SubmissionsTable';
 import ExamineeDetailsModal from './submissions/ExamineeDetailsModal';
+import ActionModal from './submissions/ActionModals';
 import { mockAssessmentsData } from '../services/mockData';
 import type { Assessment, Examinee } from '../types/data';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const TrackSubmissionsPage: React.FC = () => {
   const { examId } = useParams<{ examId: string }>();
-  const navigate = useNavigate();
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [filteredExaminees, setFilteredExaminees] = useState<Examinee[]>([]);
   const [selectedExaminee, setSelectedExaminee] = useState<Examinee | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [actionModal, setActionModal] = useState<{
+    visible: boolean;
+    type: 'paper' | 'unlock' | 'restart' | null;
+    examinee: Examinee | null;
+  }>({
+    visible: false,
+    type: null,
+    examinee: null
+  });
   const [filters, setFilters] = useState({
     areaName: '',
     groupName: '',
@@ -34,19 +43,7 @@ const TrackSubmissionsPage: React.FC = () => {
     }
   }, [examId]);
 
-  // Calculate statistics
-  const statistics = useMemo(() => {
-    if (!assessment) return { total: 0, present: 0, absent: 0, completed: 0, pending: 0 };
-    
-    const examinees = assessment.examinees;
-    const total = examinees.length;
-    const present = examinees.filter(e => e.login && e.start).length;
-    const absent = examinees.filter(e => e.status === 'Absent').length;
-    const completed = examinees.filter(e => e.status === 'Student Submission').length;
-    const pending = examinees.filter(e => e.status === 'Pending' || e.status === 'Not Started').length;
-    
-    return { total, present, absent, completed, pending };
-  }, [assessment]);
+
 
   const handleFilterChange = (newFilters: {
     areaName: string;
@@ -100,6 +97,84 @@ const TrackSubmissionsPage: React.FC = () => {
     setSelectedExaminee(null);
   };
 
+  const handleActionClick = (action: string, examinee: Examinee) => {
+    switch (action) {
+      case 'switchToPaper':
+        setActionModal({
+          visible: true,
+          type: 'paper',
+          examinee
+        });
+        break;
+      case 'unlock':
+        setActionModal({
+          visible: true,
+          type: 'unlock',
+          examinee
+        });
+        break;
+      case 'restart':
+        setActionModal({
+          visible: true,
+          type: 'restart',
+          examinee
+        });
+        break;
+      case 'resetTimer':
+        // Direct action without modal
+        message.success(`Session timer reset for ${examinee.fullName}`);
+        // TODO: Implement actual reset timer logic
+        break;
+      case 'resume':
+        // Direct action without modal
+        message.info(`Resuming session for ${examinee.fullName}`);
+        // TODO: Implement actual resume logic
+        break;
+      case 'start':
+        // Direct action without modal
+        message.info(`Starting exam session for ${examinee.fullName}`);
+        // TODO: Implement actual start logic
+        break;
+      default:
+        console.log('Unknown action:', action);
+    }
+  };
+
+  const handleActionConfirm = () => {
+    if (!actionModal.examinee || !actionModal.type) return;
+
+    const { examinee, type } = actionModal;
+    
+    switch (type) {
+      case 'paper':
+        // TODO: Implement switch to paper logic
+        message.success(`${examinee.fullName} switched to paper mode`);
+        break;
+      case 'unlock':
+        // TODO: Implement unlock session logic
+        message.success(`Session unlocked for ${examinee.fullName}`);
+        break;
+      case 'restart':
+        // TODO: Implement restart session logic
+        message.success(`Session restarted for ${examinee.fullName}`);
+        break;
+    }
+
+    setActionModal({
+      visible: false,
+      type: null,
+      examinee: null
+    });
+  };
+
+  const handleActionModalClose = () => {
+    setActionModal({
+      visible: false,
+      type: null,
+      examinee: null
+    });
+  };
+
   if (!assessment) {
     return (
       <div style={{ padding: '20px' }}>
@@ -110,87 +185,42 @@ const TrackSubmissionsPage: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      {/* Header */}
+      {/* Breadcrumb Navigation */}
       <div style={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
-        color: 'white', 
+        backgroundColor: 'white',
         padding: '16px 24px',
         borderBottom: '1px solid #e8e8e8',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0 1px 4px rgba(0,0,0,0.05)'
       }}>
-        <Space>
-          <Button 
-            type="text" 
-            icon={<ArrowLeftOutlined />} 
-            onClick={() => navigate('/assessments')}
-            style={{ color: 'white' }}
-          >
-            common.backToAssessments
-          </Button>
-          <div style={{ marginLeft: '16px' }}>
-            <Title level={4} style={{ color: 'white', margin: 0 }}>
-              submissions.title
-            </Title>
-            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
-              {assessment.program} - {assessment.assessmentName}
-            </Text>
-          </div>
-        </Space>
-        <div style={{ float: 'right', color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>
-          submissions.examId: assess-1<br />
-          submissions.duration: 2h 30m
-        </div>
+        <Breadcrumb
+          items={[
+            {
+              href: '/',
+              title: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <HomeOutlined style={{ marginRight: 4 }} />
+                  <span>Home</span>
+                </div>
+              ),
+            },
+            {
+              href: '/assessments',
+              title: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <FileTextOutlined style={{ marginRight: 4 }} />
+                  <span>Downloaded Assessments</span>
+                </div>
+              ),
+            },
+            {
+              title: `${assessment.assessmentName} - Submissions`,
+            },
+          ]}
+          style={{ fontSize: '14px' }}
+        />
       </div>
 
       <div style={{ padding: '24px' }}>
-        {/* Statistics Cards */}
-        <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-          <Col xs={24} sm={12} md={6} lg={4}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#e6f7ff', border: '1px solid #91d5ff' }}>
-              <Statistic
-                title="submissions.summary.total"
-                value={statistics.total}
-                valueStyle={{ color: '#1890ff', fontSize: '24px', fontWeight: 'bold' }}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} md={6} lg={4}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#f6ffed', border: '1px solid #b7eb8f' }}>
-              <Statistic
-                title="submissions.summary.present"
-                value={statistics.present}
-                valueStyle={{ color: '#52c41a', fontSize: '24px', fontWeight: 'bold' }}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} md={6} lg={4}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#fff2e8', border: '1px solid #ffbb96' }}>
-              <Statistic
-                title="submissions.summary.absent"
-                value={statistics.absent}
-                valueStyle={{ color: '#fa541c', fontSize: '24px', fontWeight: 'bold' }}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} md={6} lg={4}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#f9f0ff', border: '1px solid #d3adf7' }}>
-              <Statistic
-                title="submissions.summary.completed"
-                value={statistics.completed}
-                valueStyle={{ color: '#722ed1', fontSize: '24px', fontWeight: 'bold' }}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} md={6} lg={4}>
-            <Card style={{ textAlign: 'center', backgroundColor: '#fffbe6', border: '1px solid #ffe58f' }}>
-              <Statistic
-                title="submissions.summary.pending"
-                value={statistics.pending}
-                valueStyle={{ color: '#faad14', fontSize: '24px', fontWeight: 'bold' }}
-              />
-            </Card>
-          </Col>
-        </Row>
 
 
 
@@ -207,15 +237,14 @@ const TrackSubmissionsPage: React.FC = () => {
           color: '#666',
           fontSize: '14px'
         }}>
-          {filteredExaminees.length} submissions.results.showing {' '}
-          {statistics.present} submissions.results.active {' '}
-          {statistics.completed} submissions.results.completed
+          Showing {filteredExaminees.length} examinees
         </div>
 
         {/* Submissions Table */}
         <SubmissionsTable
           examinees={filteredExaminees}
           onExamineeClick={handleExamineeClick}
+          onActionClick={handleActionClick}
         />
 
         {/* Examinee Details Modal */}
@@ -225,6 +254,17 @@ const TrackSubmissionsPage: React.FC = () => {
           onClose={handleModalClose}
           assessment={assessment}
         />
+
+        {/* Action Confirmation Modal */}
+        {actionModal.visible && actionModal.type && actionModal.examinee && (
+          <ActionModal
+            visible={actionModal.visible}
+            type={actionModal.type}
+            examineeFullName={actionModal.examinee.fullName}
+            onConfirm={handleActionConfirm}
+            onCancel={handleActionModalClose}
+          />
+        )}
       </div>
     </div>
   );

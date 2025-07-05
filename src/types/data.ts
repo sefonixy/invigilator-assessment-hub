@@ -4,7 +4,7 @@
 export type AssessmentStatus = 'Completed' | 'Scheduled' | 'In Progress';
 
 // Type for the status of an examinee's session
-export type ExamineeStatus = 'Student Submission' | 'Pending' | 'Auto Locked' | 'Absent' | 'Moved to Paper' | 'Not Started';
+export type ExamineeStatus = 'Student Submission' | 'Pending' | 'Auto Locked' | 'Absent' | 'Moved to Paper' | 'Not Started' | 'In Progress';
 
 // Type for a single log entry in the examinee's activity timeline
 export interface LogEntry {

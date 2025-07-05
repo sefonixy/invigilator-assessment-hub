@@ -47,6 +47,74 @@ export const mockAssessmentsData: Assessment[] = [
         activityTimeline: [
           { timestamp: '2024-03-15T10:05:00Z', activity: 'Student logged in successfully', details: 'Session started successfully.' },
         ]
+      },
+      {
+        id: 'EX03',
+        username: 'user789',
+        fullName: 'Marcus Wilson',
+        login: false,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: 'N/A',
+        status: 'Absent',
+        groupName: 'Group A - Morning',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: []
+      },
+      {
+        id: 'EX04',
+        username: 'user101',
+        fullName: 'Sarah Johnson',
+        login: true,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: 'N/A',
+        status: 'Not Started',
+        groupName: 'Group A - Morning',
+        platform: 'Windows 11',
+        ipAddress: '192.168.1.25',
+        sessionHealth: 'Good',
+        activityTimeline: [
+          { timestamp: '2024-03-15T10:30:00Z', activity: 'Student logged in successfully', details: 'Waiting to start exam' },
+        ]
+      },
+      {
+        id: 'EX05',
+        username: 'user222',
+        fullName: 'James Rodriguez',
+        login: true,
+        start: true,
+        questionsSynced: 12,
+        timeElapsed: '00:35:00',
+        status: 'In Progress',
+        groupName: 'Group A - Morning',
+        platform: 'macOS',
+        ipAddress: '192.168.1.45',
+        sessionHealth: 'Excellent',
+        activityTimeline: [
+          { timestamp: '2024-03-15T10:15:00Z', activity: 'Student logged in successfully', details: 'Login successful' },
+          { timestamp: '2024-03-15T10:20:00Z', activity: 'Exam started', details: 'Questions loading...' },
+        ]
+      },
+      {
+        id: 'EX06',
+        username: 'user333',
+        fullName: 'Emma Thompson',
+        login: true,
+        start: true,
+        questionsSynced: 8,
+        timeElapsed: '00:25:00',
+        status: 'Auto Locked',
+        groupName: 'Group A - Morning',
+        platform: 'Windows 10',
+        ipAddress: '192.168.1.67',
+        sessionHealth: 'Unstable Connection',
+        activityTimeline: [
+          { timestamp: '2024-03-15T10:10:00Z', activity: 'Student logged in successfully', details: 'Session started' },
+          { timestamp: '2024-03-15T10:35:00Z', activity: 'Session auto-locked', details: 'Multiple tab switching detected' },
+        ]
       }
     ]
   },

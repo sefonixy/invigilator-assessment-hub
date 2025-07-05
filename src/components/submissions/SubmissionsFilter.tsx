@@ -3,6 +3,7 @@ import { Row, Col, Select, Input, TreeSelect } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import type { Examinee } from '../../types/data';
 import type { TreeSelectProps } from 'antd';
+import { mockGroupsData } from '../../services/mockData';
 
 interface SubmissionsFilterProps {
   onFilterChange: (filters: FilterType) => void;
@@ -29,79 +30,23 @@ const SubmissionsFilter: React.FC<SubmissionsFilterProps> = ({
     });
   };
 
-  // Hierarchical data for TreeSelect: Campus > Building > Floor > Group
-  const treeData: TreeSelectProps['treeData'] = [
-    {
-      title: 'Main Campus',
-      value: 'main-campus',
-      key: 'main-campus',
-      children: [
-        {
-          title: 'Engineering Building',
-          value: 'engineering-building',
-          key: 'engineering-building',
-          children: [
-            {
-              title: 'Floor 1',
-              value: 'eng-floor-1',
-              key: 'eng-floor-1',
-              children: [
-                { title: 'Group A - Morning', value: 'Group A - Morning', key: 'group-a-morning' },
-                { title: 'Group B - Morning', value: 'Group B - Morning', key: 'group-b-morning' },
-              ]
-            },
-            {
-              title: 'Floor 2',
-              value: 'eng-floor-2',
-              key: 'eng-floor-2',
-              children: [
-                { title: 'Group C - Afternoon', value: 'Group C - Afternoon', key: 'group-c-afternoon' },
-                { title: 'Group D - Afternoon', value: 'Group D - Afternoon', key: 'group-d-afternoon' },
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Science Building',
-          value: 'science-building',
-          key: 'science-building',
-          children: [
-            {
-              title: 'Floor 1',
-              value: 'sci-floor-1',
-              key: 'sci-floor-1',
-              children: [
-                { title: 'Group E - Evening', value: 'Group E - Evening', key: 'group-e-evening' },
-                { title: 'Group F - Evening', value: 'Group F - Evening', key: 'group-f-evening' },
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      title: 'North Campus',
-      value: 'north-campus',
-      key: 'north-campus',
-      children: [
-        {
-          title: 'Business Building',
-          value: 'business-building',
-          key: 'business-building',
-          children: [
-            {
-              title: 'Floor 3',
-              value: 'bus-floor-3',
-              key: 'bus-floor-3',
-              children: [
-                { title: 'Group G - Special', value: 'Group G - Special', key: 'group-g-special' },
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ];
+  // Convert imported mock data to TreeSelect format
+  const treeData: TreeSelectProps['treeData'] = mockGroupsData.map(campus => ({
+    ...campus,
+    key: campus.value,
+    children: campus.children?.map(building => ({
+      ...building,
+      key: building.value,
+      children: building.children?.map(floor => ({
+        ...floor,
+        key: floor.value,
+        children: floor.children?.map(room => ({
+          ...room,
+          key: room.value
+        }))
+      }))
+    }))
+  }));
 
   return (
     <div style={{ 

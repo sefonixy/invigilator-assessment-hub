@@ -23,12 +23,14 @@ const AssessmentTable: React.FC<AssessmentTableProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Completed':
+      case 'Finished':
         return 'success';
-      case 'In Progress':
+      case 'Ongoing':
         return 'processing';
-      case 'Scheduled':
+      case 'Not Started':
         return 'default';
+      case 'Closed':
+        return 'error';
       default:
         return 'default';
     }
@@ -87,9 +89,10 @@ const AssessmentTable: React.FC<AssessmentTableProps> = ({
       dataIndex: 'assessmentStatus',
       key: 'assessmentStatus',
       filters: [
-        { text: 'Completed', value: 'Completed' },
-        { text: 'In Progress', value: 'In Progress' },
-        { text: 'Scheduled', value: 'Scheduled' }
+        { text: 'Finished', value: 'Finished' },
+        { text: 'Ongoing', value: 'Ongoing' },
+        { text: 'Not Started', value: 'Not Started' },
+        { text: 'Closed', value: 'Closed' }
       ],
       onFilter: (value: unknown, record: Assessment) => record.assessmentStatus === value,
       render: (status: string) => (
@@ -101,7 +104,7 @@ const AssessmentTable: React.FC<AssessmentTableProps> = ({
       key: 'monitor',
       align: 'center' as const,
       render: (_: unknown, record: Assessment) => {
-        const examineeCount = record.examineeCount;
+        const examineeCount = record.examinees.length;
         
         const commonStyles = {
           display: 'inline-flex',

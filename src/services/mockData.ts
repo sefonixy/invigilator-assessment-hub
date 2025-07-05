@@ -1,465 +1,411 @@
 import type { Assessment } from '../types/data';
 
 export const mockAssessmentsData: Assessment[] = [
-  // Edge Case 1: Large exam with all possible examinee statuses
   {
     id: 'ASMT001',
-    areaName: 'Computer Science',
-    assessmentName: 'Data Structures & Algorithms Final Exam',
-    program: 'Computer Science',
-    course: 'CS301 - Data Structures & Algorithms',
-    assessmentStartDate: '2024-03-15T10:00:00Z',
-    assessmentEndDate: '2024-03-15T12:00:00Z',
-    assessmentStatus: 'In Progress',
-    examineeCount: 156,
+    areaName: '(Central)',
+    assessmentName: 'General Science Exam - Nov ACU',
+    program: 'Mixed Subjects',
+    course: 'Grade 6',
+    assessmentStartDate: '2024-11-19T13:45:00Z',
+    assessmentEndDate: '2025-11-20T12:00:00Z',
+    assessmentStatus: 'Not Started',
+    examinees: [
+      // This array covers all student statuses for one assessment
+      {
+        id: 'SA-010',
+        username: 'student.one',
+        fullName: 'abd el rahman farag',
+        login: true,
+        start: true,
+        questionsSynced: 13,
+        timeElapsed: '41 secs',
+        status: 'Student Submission', // Edge Case: Allows "Reset Session Timer" or "Restart Session"
+        groupName: '9A',
+        platform: 'Android',
+        ipAddress: '192.168.1.10',
+        sessionHealth: 'Good',
+        activityTimeline: [
+          { timestamp: '2024-11-19T13:46:00Z', activity: 'Login', details: 'Session started.' }
+        ]
+      },
+      {
+        id: 'SA-011',
+        username: 'student.two',
+        fullName: 'Ahmed Fawzy Elfeky',
+        login: true,
+        start: true,
+        questionsSynced: 13,
+        timeElapsed: '1 min, 31 secs',
+        status: 'Pending', // Edge Case: A submission that is waiting for final processing
+        groupName: '9A',
+        platform: 'Windows',
+        ipAddress: '192.168.1.12',
+        sessionHealth: 'Average normal session',
+        activityTimeline: [
+          { timestamp: '2024-11-19T13:45:30Z', activity: 'Login', details: 'Session started.' }
+        ]
+      },
+      {
+        id: 'SA-012',
+        username: 'student.three',
+        fullName: 'Amr Ahmed Fathy',
+        login: true,
+        start: true,
+        questionsSynced: 13,
+        timeElapsed: '43 secs',
+        status: 'Auto Locked', // Edge Case: Allows "Unlock Session"
+        groupName: '9B',
+        platform: 'Android',
+        ipAddress: '192.168.1.15',
+        sessionHealth: 'Needs Attention',
+        activityTimeline: [
+          { timestamp: '2024-11-19T13:47:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2024-11-19T13:47:43Z', activity: 'Warning', details: 'Session auto-locked due to inactivity.' }
+        ]
+      },
+      {
+        id: 'SA-013',
+        username: 'student.four',
+        fullName: 'abdallah goda ali',
+        login: false,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: '-',
+        status: 'Absent', // Edge Case: Allows "Switch to Paper"
+        groupName: '9B',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: []
+      },
+      {
+        id: 'SA-014',
+        username: 'student.five',
+        fullName: 'Hager Reda Mohamed',
+        login: true,
+        start: true,
+        questionsSynced: 0,
+        timeElapsed: '-',
+        status: 'Moved to Paper', // Edge Case: Result of the "Switch to Paper" action
+        groupName: '9C',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: [
+          { timestamp: '2024-11-19T14:00:00Z', activity: 'Action', details: 'Switched to paper mode by invigilator.' }
+        ]
+      },
+      {
+        id: 'SA-015',
+        username: 'student.six',
+        fullName: 'Hussein Adel-awad',
+        login: false,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: '-',
+        status: 'Not Started', // Edge Case: A student who has not begun the exam
+        groupName: '9C',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: []
+      },
+      // Additional students for comprehensive testing
+      {
+        id: 'SA-016',
+        username: 'student.seven',
+        fullName: 'Fatma Hassan Ibrahim',
+        login: true,
+        start: true,
+        questionsSynced: 8,
+        timeElapsed: '2 min, 15 secs',
+        status: 'Student Submission',
+        groupName: '9A',
+        platform: 'iOS',
+        ipAddress: '192.168.1.20',
+        sessionHealth: 'Good',
+        activityTimeline: [
+          { timestamp: '2024-11-19T13:46:30Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2024-11-19T13:48:45Z', activity: 'Submission', details: 'Submitted successfully.' }
+        ]
+      },
+      {
+        id: 'SA-017',
+        username: 'student.eight',
+        fullName: 'Mohamed Ali Hassan',
+        login: true,
+        start: true,
+        questionsSynced: 5,
+        timeElapsed: '1 min, 45 secs',
+        status: 'Pending',
+        groupName: '9B',
+        platform: 'Windows',
+        ipAddress: '192.168.1.25',
+        sessionHealth: 'Good',
+        activityTimeline: [
+          { timestamp: '2024-11-19T13:47:15Z', activity: 'Login', details: 'Session started.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ASMT002',
+    areaName: '(Central)',
+    assessmentName: 'Random exam- normal -campus',
+    program: 'Mixed Subjects',
+    course: 'Not Specific',
+    assessmentStartDate: '2024-11-26T16:46:00Z',
+    assessmentEndDate: '2025-11-27T12:00:00Z',
+    assessmentStatus: 'Ongoing', // Edge Case: An ongoing assessment
     examinees: [
       {
-        id: 'EX001',
-        username: 'johndoe2024',
-        fullName: 'John Michael Doe',
+        id: 'SA-020',
+        username: 'ongoing.student1',
+        fullName: 'Nour Mahmoud Ahmed',
         login: true,
         start: true,
         questionsSynced: 25,
-        timeElapsed: '01:45:30',
+        timeElapsed: '15 min, 30 secs',
         status: 'Student Submission',
-        groupName: 'Main Campus - Building A - Floor 3 - Lab 301',
-        platform: 'Windows 11 Pro',
-        ipAddress: '192.168.1.100',
+        groupName: '10A',
+        platform: 'Windows',
+        ipAddress: '192.168.2.10',
         sessionHealth: 'Excellent',
         activityTimeline: [
-          { timestamp: '2024-03-15T10:00:00Z', activity: 'Student logged in successfully', details: 'Login from IP: 192.168.1.100' },
-          { timestamp: '2024-03-15T10:02:00Z', activity: 'Exam started', details: 'All 25 questions loaded successfully' },
-          { timestamp: '2024-03-15T10:15:00Z', activity: 'Question 5 answered', details: 'Multiple choice - Option B selected' },
-          { timestamp: '2024-03-15T10:30:00Z', activity: 'Question 10 answered', details: 'Programming question - Solution submitted' },
-          { timestamp: '2024-03-15T11:00:00Z', activity: 'Question 15 answered', details: 'Essay question - 450 words submitted' },
-          { timestamp: '2024-03-15T11:30:00Z', activity: 'Question 20 answered', details: 'Code debugging - Issue resolved' },
-          { timestamp: '2024-03-15T11:45:00Z', activity: 'Exam submitted', details: 'All questions completed successfully' }
+          { timestamp: '2024-11-26T16:46:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2024-11-26T17:01:30Z', activity: 'Submission', details: 'Exam completed successfully.' }
         ]
       },
       {
-        id: 'EX002',
-        username: 'maria.garcia.2024',
-        fullName: 'María Elena García-Rodríguez',
+        id: 'SA-021',
+        username: 'ongoing.student2',
+        fullName: 'Youssef Omar Khaled',
         login: true,
         start: true,
         questionsSynced: 18,
-        timeElapsed: '01:20:15',
-        status: 'In Progress',
-        groupName: 'Main Campus - Building A - Floor 3 - Lab 301',
-        platform: 'macOS Sonoma 14.2',
-        ipAddress: '192.168.1.101',
+        timeElapsed: '12 min, 45 secs',
+        status: 'Pending',
+        groupName: '10A',
+        platform: 'Android',
+        ipAddress: '192.168.2.11',
         sessionHealth: 'Good',
         activityTimeline: [
-          { timestamp: '2024-03-15T10:05:00Z', activity: 'Student logged in successfully', details: 'Login successful after 2 attempts' },
-          { timestamp: '2024-03-15T10:07:00Z', activity: 'Exam started', details: 'Loading questions...' },
-          { timestamp: '2024-03-15T10:25:00Z', activity: 'Question 8 answered', details: 'Short answer - Response saved' },
-          { timestamp: '2024-03-15T11:00:00Z', activity: 'Session warning', details: 'Detected tab switching - Warning issued' },
-          { timestamp: '2024-03-15T11:15:00Z', activity: 'Question 15 answered', details: 'True/False - Answer recorded' }
+          { timestamp: '2024-11-26T16:47:00Z', activity: 'Login', details: 'Session started.' }
         ]
       },
       {
-        id: 'EX003',
-        username: 'student_inactive',
-        fullName: 'Alexander William Thompson-Smith III',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Absent',
-        groupName: 'Main Campus - Building A - Floor 3 - Lab 301',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      },
-      {
-        id: 'EX004',
-        username: 'locked_user',
-        fullName: 'Jennifer Rose O\'Connor',
-        login: true,
-        start: true,
-        questionsSynced: 12,
-        timeElapsed: '00:45:00',
-        status: 'Auto Locked',
-        groupName: 'Main Campus - Building B - Floor 2 - Lab 201',
-        platform: 'Ubuntu 22.04 LTS',
-        ipAddress: '192.168.1.102',
-        sessionHealth: 'Unstable Connection',
-        activityTimeline: [
-          { timestamp: '2024-03-15T10:00:00Z', activity: 'Student logged in successfully', details: 'Session started' },
-          { timestamp: '2024-03-15T10:15:00Z', activity: 'Question 3 answered', details: 'Multiple choice selected' },
-          { timestamp: '2024-03-15T10:30:00Z', activity: 'Suspicious activity detected', details: 'Multiple tab switching detected' },
-          { timestamp: '2024-03-15T10:45:00Z', activity: 'Session auto-locked', details: 'Exceeded maximum violations - Session locked automatically' }
-        ]
-      },
-      {
-        id: 'EX005',
-        username: 'paper_moved',
-        fullName: 'Chen Wei-Ming',
-        login: true,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Moved to Paper',
-        groupName: 'North Campus - Building C - Floor 1 - Lab 105',
-        platform: 'Chrome OS',
-        ipAddress: '192.168.2.50',
-        sessionHealth: 'N/A',
-        activityTimeline: [
-          { timestamp: '2024-03-15T09:45:00Z', activity: 'Student logged in successfully', details: 'Pre-exam login successful' },
-          { timestamp: '2024-03-15T09:58:00Z', activity: 'Technical issue reported', details: 'Network connectivity problems' },
-          { timestamp: '2024-03-15T10:05:00Z', activity: 'Moved to paper format', details: 'Invigilator decision due to technical difficulties' }
-        ]
-      },
-      {
-        id: 'EX006',
-        username: 'not_started_user',
-        fullName: 'Sarah Elizabeth Johnson',
-        login: true,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'North Campus - Building C - Floor 1 - Lab 105',
-        platform: 'Windows 10 Education',
-        ipAddress: '192.168.2.51',
-        sessionHealth: 'Good',
-        activityTimeline: [
-          { timestamp: '2024-03-15T09:55:00Z', activity: 'Student logged in successfully', details: 'Waiting for exam to begin' },
-          { timestamp: '2024-03-15T10:00:00Z', activity: 'Exam available', details: 'Student can start exam now' }
-        ]
-      }
-    ]
-  },
-  
-  // Edge Case 2: Small scheduled exam
-  {
-    id: 'ASMT002',
-    areaName: 'Mathematics',
-    assessmentName: 'Advanced Calculus III - Partial Derivatives & Multiple Integrals',
-    program: 'Applied Mathematics',
-    course: 'MATH451 - Advanced Calculus III',
-    assessmentStartDate: '2024-04-22T14:00:00Z',
-    assessmentEndDate: '2024-04-22T16:30:00Z',
-    assessmentStatus: 'Scheduled',
-    examineeCount: 23,
-    examinees: [
-      {
-        id: 'EX007',
-        username: 'mathstudent1',
-        fullName: 'Ahmed Hassan Al-Rashid',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'Science Building - Floor 4 - Room 401',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      },
-      {
-        id: 'EX008',
-        username: 'calc_expert',
-        fullName: 'Priya Sharma',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'Science Building - Floor 4 - Room 401',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      }
-    ]
-  },
-  
-  // Edge Case 3: Zero examinees (cancelled/no enrollment)
-  {
-    id: 'ASMT003',
-    areaName: 'Fine Arts',
-    assessmentName: 'Art History Survey',
-    program: 'Art History',
-    course: 'ART101 - Introduction to Art History',
-    assessmentStartDate: '2024-05-10T09:00:00Z',
-    assessmentEndDate: '2024-05-10T11:00:00Z',
-    assessmentStatus: 'Scheduled',
-    examineeCount: 0,
-    examinees: []
-  },
-  
-  // Edge Case 4: Completed exam with mixed results
-  {
-    id: 'ASMT004',
-    areaName: 'Engineering',
-    assessmentName: 'Software Engineering Principles & Design Patterns',
-    program: 'Software Engineering',
-    course: 'SE401 - Software Engineering Principles',
-    assessmentStartDate: '2024-02-15T13:00:00Z',
-    assessmentEndDate: '2024-02-15T15:30:00Z',
-    assessmentStatus: 'Completed',
-    examineeCount: 89,
-    examinees: [
-      {
-        id: 'EX009',
-        username: 'dev_master',
-        fullName: 'Robert James Anderson',
-        login: true,
-        start: true,
-        questionsSynced: 30,
-        timeElapsed: '02:28:45',
-        status: 'Student Submission',
-        groupName: 'Engineering Building - Floor 2 - Lab 205',
-        platform: 'Windows 11 Pro',
-        ipAddress: '192.168.3.100',
-        sessionHealth: 'Excellent',
-        activityTimeline: [
-          { timestamp: '2024-02-15T13:00:00Z', activity: 'Student logged in successfully', details: 'Session started on time' },
-          { timestamp: '2024-02-15T13:05:00Z', activity: 'Exam started', details: 'All 30 questions loaded' },
-          { timestamp: '2024-02-15T15:28:00Z', activity: 'Exam submitted', details: 'Completed with 2 minutes remaining' }
-        ]
-      },
-      {
-        id: 'EX010',
-        username: 'late_starter',
-        fullName: 'Emily Catherine Davis',
-        login: true,
-        start: true,
-        questionsSynced: 22,
-        timeElapsed: '01:45:20',
-        status: 'Student Submission',
-        groupName: 'Engineering Building - Floor 2 - Lab 205',
-        platform: 'macOS Monterey',
-        ipAddress: '192.168.3.101',
-        sessionHealth: 'Good',
-        activityTimeline: [
-          { timestamp: '2024-02-15T13:15:00Z', activity: 'Student logged in successfully', details: 'Late start - 15 minutes after scheduled time' },
-          { timestamp: '2024-02-15T13:18:00Z', activity: 'Exam started', details: 'Started with reduced time' },
-          { timestamp: '2024-02-15T15:03:00Z', activity: 'Exam submitted', details: 'Submitted early due to time constraints' }
-        ]
-      }
-    ]
-  },
-  
-  // Edge Case 5: Very long course name and special characters
-  {
-    id: 'ASMT005',
-    areaName: 'Business Administration',
-    assessmentName: 'International Business Strategy & Cross-Cultural Management in Global Markets',
-    program: 'Master of Business Administration (MBA)',
-    course: 'MBA650 - International Business Strategy & Cross-Cultural Management',
-    assessmentStartDate: '2024-06-05T10:00:00Z',
-    assessmentEndDate: '2024-06-05T13:00:00Z',
-    assessmentStatus: 'Scheduled',
-    examineeCount: 45,
-    examinees: [
-      {
-        id: 'EX011',
-        username: 'mba_student_2024',
-        fullName: 'François Jean-Baptiste Dubois',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'Business School - Executive Floor - Room 801',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      }
-    ]
-  },
-  
-  // Edge Case 6: Multiple campuses and buildings
-  {
-    id: 'ASMT006',
-    areaName: 'Natural Sciences',
-    assessmentName: 'Organic Chemistry Lab Practical',
-    program: 'Chemistry',
-    course: 'CHEM351 - Organic Chemistry Laboratory',
-    assessmentStartDate: '2024-04-18T08:00:00Z',
-    assessmentEndDate: '2024-04-18T12:00:00Z',
-    assessmentStatus: 'In Progress',
-    examineeCount: 67,
-    examinees: [
-      {
-        id: 'EX012',
-        username: 'chem_lab_01',
-        fullName: 'Yuki Tanaka',
-        login: true,
-        start: true,
-        questionsSynced: 15,
-        timeElapsed: '02:15:30',
-        status: 'In Progress',
-        groupName: 'West Campus - Science Complex - Floor 3 - Lab 315',
-        platform: 'iPad Pro',
-        ipAddress: '192.168.4.200',
-        sessionHealth: 'Good',
-        activityTimeline: [
-          { timestamp: '2024-04-18T08:00:00Z', activity: 'Student logged in successfully', details: 'Mobile device login' },
-          { timestamp: '2024-04-18T08:05:00Z', activity: 'Exam started', details: 'Lab practical questions loaded' },
-          { timestamp: '2024-04-18T09:30:00Z', activity: 'Lab procedure 1 completed', details: 'Synthesis reaction documented' },
-          { timestamp: '2024-04-18T10:15:00Z', activity: 'Lab procedure 2 completed', details: 'Purification steps recorded' }
-        ]
-      },
-      {
-        id: 'EX013',
-        username: 'chemistry_ace',
-        fullName: 'Dmitri Volkov',
+        id: 'SA-022',
+        username: 'ongoing.student3',
+        fullName: 'Aya Samir Farouk',
         login: true,
         start: true,
         questionsSynced: 10,
-        timeElapsed: '01:30:45',
+        timeElapsed: '8 min, 20 secs',
         status: 'Auto Locked',
-        groupName: 'West Campus - Science Complex - Floor 3 - Lab 315',
-        platform: 'Surface Pro 9',
-        ipAddress: '192.168.4.201',
-        sessionHealth: 'Poor Connection',
+        groupName: '10B',
+        platform: 'iOS',
+        ipAddress: '192.168.2.12',
+        sessionHealth: 'Needs Attention',
         activityTimeline: [
-          { timestamp: '2024-04-18T08:00:00Z', activity: 'Student logged in successfully', details: 'Touch screen device detected' },
-          { timestamp: '2024-04-18T08:10:00Z', activity: 'Exam started', details: 'Lab questions loaded' },
-          { timestamp: '2024-04-18T09:00:00Z', activity: 'Connection issues detected', details: 'Intermittent network problems' },
-          { timestamp: '2024-04-18T09:30:00Z', activity: 'Session auto-locked', details: 'Multiple connection timeouts exceeded limit' }
-        ]
-      }
-    ]
-  },
-  
-  // Edge Case 7: Different time zones and dates
-  {
-    id: 'ASMT007',
-    areaName: 'Social Sciences',
-    assessmentName: 'Psychology Research Methods',
-    program: 'Psychology',
-    course: 'PSY301 - Research Methods in Psychology',
-    assessmentStartDate: '2024-07-30T19:00:00Z',
-    assessmentEndDate: '2024-07-30T21:30:00Z',
-    assessmentStatus: 'Scheduled',
-    examineeCount: 112,
-    examinees: [
-      {
-        id: 'EX014',
-        username: 'psych_research_01',
-        fullName: 'Isabella Martinez Rodriguez',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'Social Sciences Building - Floor 1 - Room 101',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      }
-    ]
-  },
-  
-  // Edge Case 8: Single examinee scenario
-  {
-    id: 'ASMT008',
-    areaName: 'Literature',
-    assessmentName: 'Independent Study Evaluation',
-    program: 'English Literature',
-    course: 'ENG499 - Independent Study',
-    assessmentStartDate: '2024-05-25T14:00:00Z',
-    assessmentEndDate: '2024-05-25T16:00:00Z',
-    assessmentStatus: 'Scheduled',
-    examineeCount: 1,
-    examinees: [
-      {
-        id: 'EX015',
-        username: 'solo_scholar',
-        fullName: 'Theodore Benjamin Whitmore',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'Library - Study Room 204',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      }
-    ]
-  },
-  
-  // Edge Case 9: Maximum edge case - very large number
-  {
-    id: 'ASMT009',
-    areaName: 'General Education',
-    assessmentName: 'University-Wide Competency Assessment',
-    program: 'General Education',
-    course: 'GEN100 - University Competency Assessment',
-    assessmentStartDate: '2024-08-15T09:00:00Z',
-    assessmentEndDate: '2024-08-15T12:00:00Z',
-    assessmentStatus: 'Scheduled',
-    examineeCount: 1247,
-    examinees: [
-      {
-        id: 'EX016',
-        username: 'gen_ed_student',
-        fullName: 'Multiple Students Enrolled',
-        login: false,
-        start: false,
-        questionsSynced: 0,
-        timeElapsed: 'N/A',
-        status: 'Not Started',
-        groupName: 'Multiple Locations - Campus Wide',
-        platform: 'N/A',
-        ipAddress: 'N/A',
-        sessionHealth: 'N/A',
-        activityTimeline: []
-      }
-    ]
-  },
-  
-  // Edge Case 10: Past completed exam with all submission types
-  {
-    id: 'ASMT010',
-    areaName: 'Computer Science',
-    assessmentName: 'Database Systems & SQL',
-    program: 'Computer Science',
-    course: 'CS205 - Database Systems',
-    assessmentStartDate: '2024-01-20T11:00:00Z',
-    assessmentEndDate: '2024-01-20T13:00:00Z',
-    assessmentStatus: 'Completed',
-    examineeCount: 78,
-    examinees: [
-      {
-        id: 'EX017',
-        username: 'db_expert',
-        fullName: 'Michael Zhang',
-        login: true,
-        start: true,
-        questionsSynced: 20,
-        timeElapsed: '01:55:30',
-        status: 'Student Submission',
-        groupName: 'Computer Lab - Building D - Floor 1 - Lab 101',
-        platform: 'Linux Ubuntu 20.04',
-        ipAddress: '192.168.5.100',
-        sessionHealth: 'Excellent',
-        activityTimeline: [
-          { timestamp: '2024-01-20T11:00:00Z', activity: 'Student logged in successfully', details: 'Linux workstation login' },
-          { timestamp: '2024-01-20T11:05:00Z', activity: 'Exam started', details: 'Database questions loaded' },
-          { timestamp: '2024-01-20T12:55:00Z', activity: 'Exam submitted', details: 'All SQL queries completed successfully' }
+          { timestamp: '2024-11-26T16:48:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2024-11-26T16:56:20Z', activity: 'Warning', details: 'Auto-locked due to suspicious activity.' }
         ]
       },
       {
-        id: 'EX018',
-        username: 'absent_student',
-        fullName: 'No Show Student',
+        id: 'SA-023',
+        username: 'ongoing.student4',
+        fullName: 'Kareem Ashraf Mahmoud',
         login: false,
         start: false,
         questionsSynced: 0,
-        timeElapsed: 'N/A',
+        timeElapsed: '-',
         status: 'Absent',
-        groupName: 'Computer Lab - Building D - Floor 1 - Lab 101',
+        groupName: '10B',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: []
+      }
+    ]
+  },
+  {
+    id: 'ASMT003',
+    areaName: '(Central)',
+    assessmentName: 'May 2025 media test for ACU exam',
+    program: 'Mixed Subjects',
+    course: 'Grade 6',
+    assessmentStartDate: '2025-06-01T16:53:00Z',
+    assessmentEndDate: '2025-06-02T17:53:00Z',
+    assessmentStatus: 'Finished', // Edge Case: A finished assessment
+    examinees: [
+      {
+        id: 'SA-030',
+        username: 'finished.student1',
+        fullName: 'Layla Adel Mostafa',
+        login: true,
+        start: true,
+        questionsSynced: 20,
+        timeElapsed: '45 min, 30 secs',
+        status: 'Student Submission',
+        groupName: '6A',
+        platform: 'Windows',
+        ipAddress: '192.168.3.10',
+        sessionHealth: 'Excellent',
+        activityTimeline: [
+          { timestamp: '2025-06-01T16:53:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2025-06-01T17:38:30Z', activity: 'Submission', details: 'Exam completed successfully.' }
+        ]
+      },
+      {
+        id: 'SA-031',
+        username: 'finished.student2',
+        fullName: 'Omar Hesham Nabil',
+        login: true,
+        start: true,
+        questionsSynced: 15,
+        timeElapsed: '38 min, 15 secs',
+        status: 'Student Submission',
+        groupName: '6A',
+        platform: 'Android',
+        ipAddress: '192.168.3.11',
+        sessionHealth: 'Good',
+        activityTimeline: [
+          { timestamp: '2025-06-01T16:54:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2025-06-01T17:32:15Z', activity: 'Submission', details: 'Exam completed successfully.' }
+        ]
+      },
+      {
+        id: 'SA-032',
+        username: 'finished.student3',
+        fullName: 'Menna Allah Tarek',
+        login: false,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: '-',
+        status: 'Absent',
+        groupName: '6B',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: []
+      }
+    ]
+  },
+  {
+    id: 'ASMT004',
+    areaName: '(North)',
+    assessmentName: 'English Literature Final',
+    program: 'Advance English',
+    course: 'Grade 8',
+    assessmentStartDate: '2025-05-20T09:00:00Z',
+    assessmentEndDate: '2025-05-20T11:00:00Z',
+    assessmentStatus: 'Closed', // Edge Case: A closed assessment
+    examinees: [
+      {
+        id: 'SA-040',
+        username: 'closed.student1',
+        fullName: 'Salma Yasser Abdel Rahman',
+        login: true,
+        start: true,
+        questionsSynced: 30,
+        timeElapsed: '1 hr, 45 min',
+        status: 'Student Submission',
+        groupName: '8A',
+        platform: 'Windows',
+        ipAddress: '192.168.4.10',
+        sessionHealth: 'Excellent',
+        activityTimeline: [
+          { timestamp: '2025-05-20T09:00:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2025-05-20T10:45:00Z', activity: 'Submission', details: 'Exam completed successfully.' }
+        ]
+      },
+      {
+        id: 'SA-041',
+        username: 'closed.student2',
+        fullName: 'Mahmoud Tamer Soliman',
+        login: true,
+        start: true,
+        questionsSynced: 28,
+        timeElapsed: '1 hr, 52 min',
+        status: 'Student Submission',
+        groupName: '8A',
+        platform: 'macOS',
+        ipAddress: '192.168.4.11',
+        sessionHealth: 'Good',
+        activityTimeline: [
+          { timestamp: '2025-05-20T09:02:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2025-05-20T10:54:00Z', activity: 'Submission', details: 'Exam completed successfully.' }
+        ]
+      }
+    ]
+  },
+  // Additional assessments for comprehensive testing
+  {
+    id: 'ASMT005',
+    areaName: '(South)',
+    assessmentName: 'Mathematics Advanced Placement',
+    program: 'Advanced Mathematics',
+    course: 'Grade 12',
+    assessmentStartDate: '2024-12-15T10:00:00Z',
+    assessmentEndDate: '2024-12-15T13:00:00Z',
+    assessmentStatus: 'Ongoing',
+    examinees: [
+      {
+        id: 'SA-050',
+        username: 'math.advanced1',
+        fullName: 'Yasmin Ahmed Hosny',
+        login: true,
+        start: true,
+        questionsSynced: 22,
+        timeElapsed: '2 hr, 15 min',
+        status: 'Student Submission',
+        groupName: '12A',
+        platform: 'Windows',
+        ipAddress: '192.168.5.10',
+        sessionHealth: 'Excellent',
+        activityTimeline: [
+          { timestamp: '2024-12-15T10:00:00Z', activity: 'Login', details: 'Session started.' },
+          { timestamp: '2024-12-15T12:15:00Z', activity: 'Submission', details: 'Exam completed successfully.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ASMT006',
+    areaName: '(East)',
+    assessmentName: 'Physics Lab Practical Exam',
+    program: 'Natural Sciences',
+    course: 'Grade 11',
+    assessmentStartDate: '2024-11-30T14:00:00Z',
+    assessmentEndDate: '2024-11-30T17:00:00Z',
+    assessmentStatus: 'Not Started',
+    examinees: [
+      {
+        id: 'SA-060',
+        username: 'physics.lab1',
+        fullName: 'Marwan Essam Fahmy',
+        login: false,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: '-',
+        status: 'Not Started',
+        groupName: '11A',
+        platform: 'N/A',
+        ipAddress: 'N/A',
+        sessionHealth: 'N/A',
+        activityTimeline: []
+      },
+      {
+        id: 'SA-061',
+        username: 'physics.lab2',
+        fullName: 'Rania Khaled Zaki',
+        login: false,
+        start: false,
+        questionsSynced: 0,
+        timeElapsed: '-',
+        status: 'Not Started',
+        groupName: '11A',
         platform: 'N/A',
         ipAddress: 'N/A',
         sessionHealth: 'N/A',
@@ -472,34 +418,28 @@ export const mockAssessmentsData: Assessment[] = [
 // Mock data for tree select groups (hierarchical structure)
 export const mockGroupsData = [
   {
-    title: 'Main Campus',
-    value: 'main-campus',
+    title: 'Central Campus',
+    value: 'central-campus',
     children: [
       {
-        title: 'Building A',
-        value: 'main-building-a',
+        title: 'Main Building',
+        value: 'central-main-building',
         children: [
           {
-            title: 'Floor 3',
-            value: 'main-a-floor-3',
+            title: 'Floor 1',
+            value: 'central-main-floor-1',
             children: [
-              { title: 'Lab 301', value: 'main-a-3-lab-301' },
-              { title: 'Lab 302', value: 'main-a-3-lab-302' },
-              { title: 'Lab 303', value: 'main-a-3-lab-303' }
+              { title: '9A', value: '9A' },
+              { title: '9B', value: '9B' },
+              { title: '9C', value: '9C' }
             ]
-          }
-        ]
-      },
-      {
-        title: 'Building B',
-        value: 'main-building-b',
-        children: [
+          },
           {
             title: 'Floor 2',
-            value: 'main-b-floor-2',
+            value: 'central-main-floor-2',
             children: [
-              { title: 'Lab 201', value: 'main-b-2-lab-201' },
-              { title: 'Lab 202', value: 'main-b-2-lab-202' }
+              { title: '10A', value: '10A' },
+              { title: '10B', value: '10B' }
             ]
           }
         ]
@@ -511,15 +451,15 @@ export const mockGroupsData = [
     value: 'north-campus',
     children: [
       {
-        title: 'Building C',
-        value: 'north-building-c',
+        title: 'Academic Building',
+        value: 'north-academic-building',
         children: [
           {
-            title: 'Floor 1',
-            value: 'north-c-floor-1',
+            title: 'Floor 3',
+            value: 'north-academic-floor-3',
             children: [
-              { title: 'Lab 105', value: 'north-c-1-lab-105' },
-              { title: 'Lab 106', value: 'north-c-1-lab-106' }
+              { title: '8A', value: '8A' },
+              { title: '8B', value: '8B' }
             ]
           }
         ]
@@ -527,19 +467,39 @@ export const mockGroupsData = [
     ]
   },
   {
-    title: 'West Campus',
-    value: 'west-campus',
+    title: 'South Campus',
+    value: 'south-campus',
     children: [
       {
-        title: 'Science Complex',
-        value: 'west-science-complex',
+        title: 'Science Building',
+        value: 'south-science-building',
         children: [
           {
-            title: 'Floor 3',
-            value: 'west-science-floor-3',
+            title: 'Floor 4',
+            value: 'south-science-floor-4',
             children: [
-              { title: 'Lab 315', value: 'west-science-3-lab-315' },
-              { title: 'Lab 316', value: 'west-science-3-lab-316' }
+              { title: '12A', value: '12A' },
+              { title: '11A', value: '11A' }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    title: 'East Campus',
+    value: 'east-campus',
+    children: [
+      {
+        title: 'Lab Complex',
+        value: 'east-lab-complex',
+        children: [
+          {
+            title: 'Floor 2',
+            value: 'east-lab-floor-2',
+            children: [
+              { title: '6A', value: '6A' },
+              { title: '6B', value: '6B' }
             ]
           }
         ]

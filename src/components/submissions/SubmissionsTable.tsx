@@ -26,10 +26,10 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
         return 'error';
       case 'Not Started':
         return 'default';
-      case 'In Progress':
-        return 'processing';
       case 'Auto Locked':
         return 'warning';
+      case 'Moved to Paper':
+        return 'purple';
       default:
         return 'default';
     }
@@ -89,18 +89,6 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
             style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
           >
             Unlock Session
-          </Button>
-        );
-
-      case 'In Progress':
-        return (
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => onActionClick('resume', examinee)}
-            style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
-          >
-            Resume
           </Button>
         );
 
@@ -210,9 +198,20 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       sorter: (a: Examinee, b: Examinee) => {
         // Convert time strings to minutes for sorting
         const timeToMinutes = (timeStr: string) => {
-          if (timeStr === 'N/A') return -1;
-          const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-          return hours * 60 + minutes + seconds / 60;
+          if (timeStr === '-' || timeStr === 'N/A') return -1;
+          
+          let totalMinutes = 0;
+          
+          // Handle new format: "41 secs", "1 min, 31 secs", "2 hr, 15 min"
+          const hrMatch = timeStr.match(/(\d+)\s*hr/);
+          const minMatch = timeStr.match(/(\d+)\s*min/);
+          const secMatch = timeStr.match(/(\d+)\s*secs?/);
+          
+          if (hrMatch) totalMinutes += parseInt(hrMatch[1]) * 60;
+          if (minMatch) totalMinutes += parseInt(minMatch[1]);
+          if (secMatch) totalMinutes += parseInt(secMatch[1]) / 60;
+          
+          return totalMinutes;
         };
         return timeToMinutes(a.timeElapsed) - timeToMinutes(b.timeElapsed);
       },

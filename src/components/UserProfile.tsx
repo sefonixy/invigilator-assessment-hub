@@ -1,50 +1,155 @@
 import React, { useState } from 'react';
-import { Avatar, Dropdown, Space } from 'antd';
+import { Avatar, Dropdown, Button, Switch, Select } from 'antd';
 import type { MenuProps } from 'antd';
 import { 
   UserOutlined, 
   SettingOutlined, 
   LogoutOutlined,
-  EditOutlined 
+  DownOutlined,
+  SunOutlined,
+  MoonOutlined,
+  ExpandOutlined,
+  CompressOutlined,
+  GlobalOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import ProfileModal from './ProfileModal';
 import SettingsModal from './SettingsModal';
+import { useAppContext } from '../hooks/useAppContext';
 
 // Demo profile data - in a real app, this would come from your state management
 const defaultProfileData = {
   firstName: 'John',
   lastName: 'Doe',
-  email: 'john.doe@invigilator.com',
+  email: 'john.doe@university.edu',
+  role: 'instructor',
+  department: 'Computer Science',
   phone: '+1 (555) 123-4567',
-  role: 'invigilator',
-  department: 'Assessment Department',
-  bio: 'Experienced invigilator with 5+ years in assessment management and exam supervision.'
+  bio: 'Experienced instructor with 5+ years in assessment management and exam supervision.',
+  avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
 };
 
 const UserProfile: React.FC = () => {
   const { t } = useTranslation();
+  const { 
+    themeMode, 
+    language, 
+    compactMode,
+    toggleTheme, 
+    changeLanguage, 
+    toggleCompactMode,
+    isDark,
+    isCompact
+  } = useAppContext();
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   const getInitials = () => {
-    const first = defaultProfileData.firstName?.[0] || '';
-    const last = defaultProfileData.lastName?.[0] || '';
-    return (first + last).toUpperCase();
+    return `${defaultProfileData.firstName[0]}${defaultProfileData.lastName[0]}`;
+  };
+
+  const handleLogout = () => {
+    // Placeholder for logout logic
+    console.log('Logout clicked');
   };
 
   const menuItems: MenuProps['items'] = [
     {
       key: 'profile',
-      icon: <EditOutlined />,
-      label: t('profile.buttons.edit'),
+      icon: <UserOutlined />,
+      label: (
+        <span style={{ fontSize: isCompact ? '13px' : '14px' }}>
+          {t('profile.viewProfile')}
+        </span>
+      ),
       onClick: () => setProfileModalOpen(true),
     },
     {
       key: 'settings',
       icon: <SettingOutlined />,
-      label: 'Settings',
+      label: (
+        <span style={{ fontSize: isCompact ? '13px' : '14px' }}>
+          {t('profile.settings')}
+        </span>
+      ),
       onClick: () => setSettingsModalOpen(true),
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'theme',
+      icon: isDark ? <SunOutlined /> : <MoonOutlined />,
+      label: (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          fontSize: isCompact ? '13px' : '14px'
+        }}>
+          <span>{isDark ? t('profile.lightMode') : t('profile.darkMode')}</span>
+          <Switch
+            size={isCompact ? 'small' : 'default'}
+            checked={isDark}
+            onChange={(checked) => {
+              if ((checked && themeMode === 'light') || (!checked && themeMode === 'dark')) {
+                toggleTheme();
+              }
+            }}
+          />
+        </div>
+      ),
+      onClick: () => {},
+    },
+    {
+      key: 'compact',
+      icon: isCompact ? <ExpandOutlined /> : <CompressOutlined />,
+      label: (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          fontSize: isCompact ? '13px' : '14px'
+        }}>
+          <span>{isCompact ? t('profile.comfortableMode') : t('profile.compactMode')}</span>
+          <Switch
+            size={isCompact ? 'small' : 'default'}
+            checked={isCompact}
+            onChange={(checked) => {
+              if ((checked && compactMode === 'comfortable') || (!checked && compactMode === 'compact')) {
+                toggleCompactMode();
+              }
+            }}
+          />
+        </div>
+      ),
+      onClick: () => {},
+    },
+    {
+      key: 'language',
+      icon: <GlobalOutlined />,
+      label: (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          fontSize: isCompact ? '13px' : '14px'
+        }}>
+          <span>{t('profile.language')}</span>
+          <Select
+            value={language}
+            onChange={changeLanguage}
+            size={isCompact ? 'small' : 'middle'}
+            style={{ width: 70 }}
+            options={[
+              { value: 'en', label: 'EN' },
+              { value: 'ar', label: 'AR' }
+            ]}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      ),
+      onClick: () => {},
     },
     {
       type: 'divider',
@@ -52,12 +157,15 @@ const UserProfile: React.FC = () => {
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: t('profile.buttons.logout'),
-      danger: true,
-      onClick: () => {
-        // Placeholder for logout
-        console.log('Logout clicked');
-      },
+      label: (
+        <span style={{ 
+          color: '#ff4d4f',
+          fontSize: isCompact ? '13px' : '14px'
+        }}>
+          {t('profile.logout')}
+        </span>
+      ),
+      onClick: handleLogout,
     },
   ];
 
@@ -65,49 +173,61 @@ const UserProfile: React.FC = () => {
     <>
       <Dropdown
         menu={{ items: menuItems }}
-        placement="bottomRight"
         trigger={['click']}
+        placement="bottomRight"
         arrow={{ pointAtCenter: true }}
       >
-        <div 
-          style={{ 
-            cursor: 'pointer',
+        <Button
+          type="text"
+          className="user-profile-button theme-transition"
+          style={{
+            height: isCompact ? 36 : 40,
+            padding: isCompact ? '4px 8px' : '6px 12px',
             display: 'flex',
             alignItems: 'center',
-            gap: 8,
-            padding: '4px 8px',
+            gap: isCompact ? 6 : 8,
+            color: 'white',
+            border: 'none',
             borderRadius: 6,
-            transition: 'background-color 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
+            fontSize: isCompact ? '13px' : '14px'
           }}
         >
-          <Space align="center" size={8}>
-            <div style={{ textAlign: 'right', color: 'white' }}>
-              <div style={{ fontSize: '14px', fontWeight: 500, lineHeight: 1.2 }}>
-                {defaultProfileData.firstName} {defaultProfileData.lastName}
-              </div>
-              <div style={{ fontSize: '12px', opacity: 0.8, lineHeight: 1.2 }}>
-                {t(`profile.roles.${defaultProfileData.role}`)}
-              </div>
-            </div>
-            <Avatar 
-              size={40}
-              icon={<UserOutlined />}
-              style={{ 
-                backgroundColor: '#1890ff',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
-                cursor: 'pointer'
-              }}
-            >
-              {getInitials()}
-            </Avatar>
-          </Space>
-        </div>
+          <Avatar
+            size={isCompact ? 28 : 32}
+            src={defaultProfileData.avatar}
+            alt={`${defaultProfileData.firstName} ${defaultProfileData.lastName}`}
+            style={{ 
+              backgroundColor: '#1890ff',
+              color: 'white',
+              fontWeight: 'bold'
+            }}
+          >
+            {getInitials()}
+          </Avatar>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'flex-start',
+            lineHeight: isCompact ? 1.2 : 1.4
+          }}>
+            <span style={{ 
+              fontWeight: 500,
+              fontSize: isCompact ? '13px' : '14px'
+            }}>
+              {defaultProfileData.firstName} {defaultProfileData.lastName}
+            </span>
+            <span style={{ 
+              fontSize: isCompact ? '11px' : '12px',
+              opacity: 0.8 
+            }}>
+              {t(`profile.roles.${defaultProfileData.role}`)}
+            </span>
+          </div>
+          <DownOutlined style={{ 
+            fontSize: isCompact ? '10px' : '12px',
+            opacity: 0.7 
+          }} />
+        </Button>
       </Dropdown>
 
       <ProfileModal
@@ -115,7 +235,7 @@ const UserProfile: React.FC = () => {
         onClose={() => setProfileModalOpen(false)}
         profileData={defaultProfileData}
       />
-
+      
       <SettingsModal
         open={settingsModalOpen}
         onClose={() => setSettingsModalOpen(false)}

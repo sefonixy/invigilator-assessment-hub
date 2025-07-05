@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Card, Typography, Space, notification } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import AssessmentFiltersComponent from './AssessmentFilters';
 import AssessmentTable from './AssessmentTable';
 import type { 
@@ -22,6 +23,8 @@ import { ASSESSMENT_ACTIONS } from '../../types/assessment';
 const { Title } = Typography;
 
 const AssessmentsPage: React.FC = () => {
+  const navigate = useNavigate();
+  
   // State management
   const [filters, setFilters] = useState<AssessmentFilters>({});
   const [loading, setLoading] = useState(false);
@@ -90,11 +93,9 @@ const AssessmentsPage: React.FC = () => {
       
       switch (action) {
         case ASSESSMENT_ACTIONS.MONITOR_EXAMINEES:
-          notification.success({
-            message: 'Monitor Examinees',
-            description: `Started monitoring examinees for "${assessment.name}"`
-          });
-          break;
+          // Navigate to track submissions page
+          navigate(`/exam/${assessment.id}/submissions`);
+          return; // Don't show loading state for navigation
           
         case ASSESSMENT_ACTIONS.SYNC_SUBMISSIONS:
           notification.success({

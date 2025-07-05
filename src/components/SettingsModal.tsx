@@ -7,19 +7,21 @@ import {
   Row,
   Col,
   Divider,
-  notification
+  Space,
+  Form
 } from 'antd';
 import { 
   GlobalOutlined,
   SunOutlined,
   MoonOutlined,
-  SettingOutlined
+  CompressOutlined,
+  ExpandOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../hooks/useAppContext';
 import type { Language } from '../types/app';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 interface SettingsModalProps {
   open: boolean;
@@ -31,144 +33,201 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose
 }) => {
   const { t } = useTranslation();
-  const { themeMode, language, changeLanguage, toggleTheme } = useAppContext();
+  const { 
+    themeMode, 
+    language, 
+    compactMode,
+    toggleTheme, 
+    changeLanguage, 
+    toggleCompactMode,
+    isDark,
+    isCompact
+  } = useAppContext();
 
-  // Language options
-  const languageOptions = [
-    {
-      label: t('languages.english'),
-      value: 'en' as Language,
-    },
-    {
-      label: t('languages.arabic'),
-      value: 'ar' as Language,
-    },
-  ];
-
-  const handleLanguageChange = (newLanguage: Language) => {
-    changeLanguage(newLanguage);
-    notification.info({
-      message: t('notifications.languageChanged'),
-      description: t('notifications.languageChangedDescription', { 
-        language: t(`languages.${newLanguage === 'en' ? 'english' : 'arabic'}`) 
-      }),
-      placement: 'topRight',
-    });
+  const handleThemeChange = (checked: boolean) => {
+    if ((checked && themeMode === 'light') || (!checked && themeMode === 'dark')) {
+      toggleTheme();
+    }
   };
 
-  const handleThemeToggle = () => {
-    toggleTheme();
-    notification.success({
-      message: `${t('settings.theme')} ${t('notifications.success')}`,
-      description: `${t('settings.theme')} changed to ${themeMode === 'light' ? t('settings.dark') : t('settings.light')}`,
-      placement: 'topRight',
-    });
+  const handleLanguageChange = (value: Language) => {
+    changeLanguage(value);
+  };
+
+  const handleCompactModeChange = (checked: boolean) => {
+    if ((checked && compactMode === 'comfortable') || (!checked && compactMode === 'compact')) {
+      toggleCompactMode();
+    }
   };
 
   return (
     <Modal
       title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <SettingOutlined />
-          <span>Settings</span>
-        </div>
+        <Space>
+          <GlobalOutlined />
+          {t('settings.title')}
+        </Space>
       }
       open={open}
       onCancel={onClose}
       footer={null}
       width={500}
-      destroyOnClose
+      style={{ top: 20 }}
     >
       <div style={{ padding: '16px 0' }}>
-        {/* Interface Preferences */}
-        <Divider orientation="left">
-          <Text strong style={{ fontSize: 16 }}>Interface Preferences</Text>
-        </Divider>
-
-        <div style={{ marginBottom: 32 }}>
-          <Row gutter={[16, 24]}>
-            {/* Language Setting */}
+        <Form layout="vertical" size={isCompact ? 'small' : 'middle'}>
+          
+          {/* Appearance Section */}
+          <Title level={5} style={{ marginBottom: 16 }}>
+            {t('settings.appearance.title')}
+          </Title>
+          
+          <Row gutter={24}>
             <Col span={24}>
-              <div>
-                <Text strong style={{ display: 'block', marginBottom: 12, fontSize: 16 }}>
-                  <GlobalOutlined style={{ marginRight: 8, color: '#1890ff' }} />
-                  {t('settings.language')}
-                </Text>
-                <Text style={{ display: 'block', marginBottom: 12, opacity: 0.8 }}>
-                  Select your preferred interface language. This will change the language across the entire application.
-                </Text>
+              <Form.Item
+                label={
+                  <Space>
+                    {isDark ? <MoonOutlined /> : <SunOutlined />}
+                    {t('settings.appearance.theme')}
+                  </Space>
+                }
+                style={{ marginBottom: 20 }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <Text strong>{isDark ? t('settings.appearance.darkMode') : t('settings.appearance.lightMode')}</Text>
+                    <br />
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {t('settings.appearance.themeDescription')}
+                    </Text>
+                  </div>
+                  <Switch
+                    checked={isDark}
+                    onChange={handleThemeChange}
+                    checkedChildren={<MoonOutlined />}
+                    unCheckedChildren={<SunOutlined />}
+                  />
+                </div>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={24}>
+            <Col span={24}>
+              <Form.Item
+                label={
+                  <Space>
+                    {isCompact ? <CompressOutlined /> : <ExpandOutlined />}
+                    {t('settings.appearance.density')}
+                  </Space>
+                }
+                style={{ marginBottom: 20 }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <Text strong>
+                      {isCompact ? t('settings.appearance.compactMode') : t('settings.appearance.comfortableMode')}
+                    </Text>
+                    <br />
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {t('settings.appearance.densityDescription')}
+                    </Text>
+                  </div>
+                  <Switch
+                    checked={isCompact}
+                    onChange={handleCompactModeChange}
+                    checkedChildren={<CompressOutlined />}
+                    unCheckedChildren={<ExpandOutlined />}
+                  />
+                </div>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Divider />
+
+          {/* Language Section */}
+          <Title level={5} style={{ marginBottom: 16 }}>
+            {t('settings.language.title')}
+          </Title>
+          
+          <Row gutter={24}>
+            <Col span={24}>
+              <Form.Item
+                label={
+                  <Space>
+                    <GlobalOutlined />
+                    {t('settings.language.interface')}
+                  </Space>
+                }
+              >
                 <Select
                   value={language}
                   onChange={handleLanguageChange}
-                  options={languageOptions}
                   style={{ width: '100%' }}
-                  size="large"
+                  options={[
+                    {
+                      value: 'en',
+                      label: (
+                        <Space>
+                          <span>🇺🇸</span>
+                          <span>English</span>
+                        </Space>
+                      )
+                    },
+                    {
+                      value: 'ar',
+                      label: (
+                        <Space>
+                          <span>🇸🇦</span>
+                          <span>العربية</span>
+                        </Space>
+                      )
+                    }
+                  ]}
                 />
-              </div>
-            </Col>
-
-            {/* Theme Setting */}
-            <Col span={24}>
-              <div>
-                <Text strong style={{ display: 'block', marginBottom: 12, fontSize: 16 }}>
-                  <SunOutlined style={{ marginRight: 8, color: '#1890ff' }} />
-                  {t('settings.theme')}
-                </Text>
-                <Text style={{ display: 'block', marginBottom: 12, opacity: 0.8 }}>
-                  Choose between light and dark theme for better viewing experience.
-                </Text>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 12,
-                  padding: '12px 16px',
-                  backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#fafafa',
-                  borderRadius: 8,
-                  border: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #d9d9d9'
-                }}>
-                  <SunOutlined style={{ color: themeMode === 'light' ? '#1890ff' : 'rgba(255, 255, 255, 0.45)' }} />
-                  <Text style={{ 
-                    color: themeMode === 'light' ? '#1890ff' : 'rgba(255, 255, 255, 0.45)',
-                    fontWeight: themeMode === 'light' ? 600 : 400
-                  }}>
-                    {t('settings.light')}
-                  </Text>
-                  <Switch
-                    checked={themeMode === 'dark'}
-                    onChange={handleThemeToggle}
-                    checkedChildren={<MoonOutlined />}
-                    unCheckedChildren={<SunOutlined />}
-                    size="default"
-                  />
-                  <Text style={{ 
-                    color: themeMode === 'dark' ? '#1890ff' : 'rgba(0, 0, 0, 0.45)',
-                    fontWeight: themeMode === 'dark' ? 600 : 400
-                  }}>
-                    {t('settings.dark')}
-                  </Text>
-                  <MoonOutlined style={{ color: themeMode === 'dark' ? '#1890ff' : 'rgba(0, 0, 0, 0.45)' }} />
-                </div>
-              </div>
+              </Form.Item>
             </Col>
           </Row>
-        </div>
 
-        {/* Additional Settings Section (Placeholder) */}
-        <Divider orientation="left">
-          <Text strong style={{ fontSize: 16 }}>Application Settings</Text>
-        </Divider>
+          <Divider />
 
-        <div style={{ 
-          padding: '16px',
-          backgroundColor: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f5f5f5',
-          borderRadius: 6,
-          textAlign: 'center',
-          border: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
-        }}>
-          <Text style={{ opacity: 0.7 }}>
-            Additional application settings will be available here in future updates.
+          {/* Performance Section */}
+          <Title level={5} style={{ marginBottom: 16 }}>
+            {t('settings.performance.title')}
+          </Title>
+          
+          <Text type="secondary" style={{ fontSize: 13 }}>
+            {t('settings.performance.description')}
           </Text>
-        </div>
+          
+          <div style={{ 
+            marginTop: 12, 
+            padding: 12, 
+            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+            borderRadius: 6,
+            fontSize: 12
+          }}>
+            <Space direction="vertical" size={4} style={{ width: '100%' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Text type="secondary">Theme:</Text>
+                <Text type="secondary">{themeMode}</Text>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Text type="secondary">Language:</Text>
+                <Text type="secondary">{language.toUpperCase()}</Text>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Text type="secondary">Density:</Text>
+                <Text type="secondary">{compactMode}</Text>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Text type="secondary">RTL:</Text>
+                <Text type="secondary">{language === 'ar' ? 'enabled' : 'disabled'}</Text>
+              </div>
+            </Space>
+          </div>
+        </Form>
       </div>
     </Modal>
   );

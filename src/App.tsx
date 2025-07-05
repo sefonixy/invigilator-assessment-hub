@@ -5,6 +5,7 @@ import { FileTextOutlined } from '@ant-design/icons';
 import { useAppContext } from './hooks/useAppContext';
 import UserProfile from './components/UserProfile';
 import AssessmentsPage from './components/assessments/AssessmentsPage';
+import TrackSubmissionsPage from './components/submissions/TrackSubmissionsPage';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -27,7 +28,7 @@ function App() {
               level={3} 
               style={{ 
                 color: 'white', 
-                margin: 0, 
+                margin: 0,
                 marginRight: 48,
                 fontWeight: 600
               }}
@@ -57,7 +58,7 @@ function App() {
           
           <UserProfile />
         </Header>
-
+        
         <Content style={{ 
           padding: 0,
           background: themeMode === 'dark' ? '#141414' : '#f0f2f5'
@@ -65,6 +66,7 @@ function App() {
           <Routes>
             <Route path="/" element={<AssessmentsPage />} />
             <Route path="/assessments" element={<AssessmentsPage />} />
+            <Route path="/exam/:examId/submissions" element={<TrackSubmissionsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Content>

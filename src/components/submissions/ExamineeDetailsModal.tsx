@@ -1,244 +1,201 @@
 import React from 'react';
-import { Modal, Descriptions, Timeline, Tag, Space, Typography, Row, Col, Progress } from 'antd';
-import { 
-  ClockCircleOutlined, 
-  UserOutlined,
-  DesktopOutlined,
-  GlobalOutlined,
-  SafetyOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-  PlayCircleOutlined,
-  FileTextOutlined,
-  WarningOutlined,
-  ExclamationCircleOutlined
-} from '@ant-design/icons';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import type { ExamineeDetailsModalProps, SessionHealth } from '../../types/examinee';
-
-dayjs.extend(relativeTime);
+import { Modal, Row, Col, Progress, Tag, Typography, Timeline } from 'antd';
+import { UserOutlined, ClockCircleOutlined, CheckCircleOutlined, PlayCircleOutlined, EditOutlined } from '@ant-design/icons';
+import type { Examinee, Assessment } from '../../types/data';
 
 const { Title, Text } = Typography;
+
+interface ExamineeDetailsModalProps {
+  visible: boolean;
+  examinee: Examinee | null;
+  onClose: () => void;
+  assessment: Assessment;
+}
 
 const ExamineeDetailsModal: React.FC<ExamineeDetailsModalProps> = ({
   visible,
   examinee,
   onClose,
-  loading = false
+  assessment
 }) => {
-  if (!examinee) {
-    return null;
-  }
+  if (!examinee) return null;
 
-  // Session health color mapping
-  const getHealthColor = (health: SessionHealth): string => {
-    switch (health) {
-      case 'Excellent': return '#52c41a';
-      case 'Good': return '#1890ff'; 
-      case 'Fair': return '#faad14';
-      case 'Poor': return '#ff7a45';
-      case 'Critical': return '#ff4d4f';
-      default: return '#d9d9d9';
+  const progressPercentage = (examinee.questionsSynced / 20) * 100;
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Student Submission':
+        return 'success';
+      case 'Pending':
+        return 'processing';
+      case 'Absent':
+        return 'error';
+      case 'Not Started':
+        return 'default';
+      default:
+        return 'default';
     }
   };
-
-  // Session health percentage
-  const getHealthPercentage = (health: SessionHealth): number => {
-    switch (health) {
-      case 'Excellent': return 95;
-      case 'Good': return 80;
-      case 'Fair': return 60;
-      case 'Poor': return 40;
-      case 'Critical': return 20;
-      default: return 0;
-    }
-  };
-
-  // Get timeline item icon based on log type
-  const getTimelineIcon = (type: string) => {
-    switch (type) {
-      case 'login': return <LoginOutlined style={{ color: '#52c41a' }} />;
-      case 'logout': return <LogoutOutlined style={{ color: '#ff4d4f' }} />;
-      case 'start': return <PlayCircleOutlined style={{ color: '#1890ff' }} />;
-      case 'submit': return <FileTextOutlined style={{ color: '#722ed1' }} />;
-      case 'warning': return <WarningOutlined style={{ color: '#faad14' }} />;
-      case 'error': return <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />;
-      default: return <ClockCircleOutlined style={{ color: '#d9d9d9' }} />;
-    }
-  };
-
-  // Calculate progress percentage
-  const progressPercentage = examinee.totalQuestions > 0 
-    ? Math.round((examinee.questionsSynced / examinee.totalQuestions) * 100)
-    : 0;
 
   return (
     <Modal
       title={
-        <Space>
-          <UserOutlined />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <UserOutlined style={{ marginRight: 8 }} />
           <span>Examinee Details - {examinee.fullName}</span>
-        </Space>
+        </div>
       }
-      open={visible}
+      visible={visible}
       onCancel={onClose}
-      width={800}
       footer={null}
-      loading={loading}
+      width={800}
       style={{ top: 20 }}
     >
-      <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-        {/* Basic Information */}
-        <Descriptions 
-          title="Student Information" 
-          bordered 
-          size="small"
-          column={2}
-          style={{ marginBottom: 24 }}
-        >
-          <Descriptions.Item label="Username" span={1}>
-            <Text strong>{examinee.username}</Text>
-          </Descriptions.Item>
-          <Descriptions.Item label="Full Name" span={1}>
-            <Text strong>{examinee.fullName}</Text>
-          </Descriptions.Item>
-          <Descriptions.Item label="Area" span={1}>
-            {examinee.areaName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Group" span={1}>
-            {examinee.groupName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Status" span={1}>
-            <Tag 
-              color={examinee.status === 'Present' ? 'green' : 
-                     examinee.status === 'Absent' ? 'red' : 'orange'}
-            >
-              {examinee.status}
-            </Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label="IP Address" span={1}>
-            <Space>
-              <GlobalOutlined />
-              {examinee.ipAddress}
-            </Space>
-          </Descriptions.Item>
-        </Descriptions>
+      <div style={{ padding: '20px 0' }}>
+        {/* Student Information */}
+        <div style={{ marginBottom: '24px' }}>
+          <Title level={5}>Student Information</Title>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Username</Text>
+                <div style={{ fontWeight: 500 }}>{examinee.username}</div>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Area</Text>
+                <div style={{ fontWeight: 500 }}>{assessment.areaName}</div>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Status</Text>
+                <div>
+                  <Tag color={getStatusColor(examinee.status)}>{examinee.status}</Tag>
+                </div>
+              </div>
+            </Col>
+            <Col span={12}>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Full Name</Text>
+                <div style={{ fontWeight: 500 }}>{examinee.fullName}</div>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Group</Text>
+                <div style={{ fontWeight: 500 }}>{examinee.groupName}</div>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">IP Address</Text>
+                <div style={{ fontWeight: 500 }}>{examinee.ipAddress}</div>
+              </div>
+            </Col>
+          </Row>
+        </div>
 
         {/* Exam Progress */}
-        <Title level={5} style={{ marginBottom: 16 }}>
-          <FileTextOutlined style={{ marginRight: 8 }} />
-          Exam Progress
-        </Title>
-        
-        <Row gutter={16} style={{ marginBottom: 24 }}>
-          <Col span={12}>
-            <div style={{ padding: 16, backgroundColor: '#f5f5f5', borderRadius: 6 }}>
-              <Text strong>Questions Completed</Text>
-              <div style={{ marginTop: 8 }}>
-                <Progress 
-                  percent={progressPercentage}
-                  format={() => `${examinee.questionsSynced}/${examinee.totalQuestions}`}
-                  strokeColor={progressPercentage === 100 ? '#52c41a' : '#1890ff'}
-                />
+        <div style={{ marginBottom: '24px' }}>
+          <Title level={5}>
+            <EditOutlined style={{ marginRight: 8 }} />
+            Exam Progress
+          </Title>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <div style={{ marginBottom: '16px' }}>
+                <Text type="secondary">Questions Completed</Text>
+                <div style={{ marginTop: '8px' }}>
+                  <Progress
+                    percent={progressPercentage}
+                    format={() => `${examinee.questionsSynced}/20`}
+                    strokeColor="#52c41a"
+                  />
+                </div>
               </div>
-            </div>
-          </Col>
-          <Col span={12}>
-            <div style={{ padding: 16, backgroundColor: '#f5f5f5', borderRadius: 6 }}>
-              <Text strong>Time Elapsed</Text>
-              <div style={{ marginTop: 8, fontSize: 18, fontWeight: 500 }}>
-                <ClockCircleOutlined style={{ marginRight: 8 }} />
-                {examinee.timeElapsed}
+            </Col>
+            <Col span={12}>
+              <div style={{ marginBottom: '16px' }}>
+                <Text type="secondary">Time Elapsed</Text>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  marginTop: '8px',
+                  fontSize: '18px',
+                  fontWeight: 'bold'
+                }}>
+                  <ClockCircleOutlined style={{ marginRight: 8 }} />
+                  {examinee.timeElapsed}
+                </div>
+                <Text type="secondary" style={{ fontSize: '12px' }}>
+                  Remaining: 65 minutes
+                </Text>
               </div>
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                Remaining: {examinee.remainingTime} minutes
-              </Text>
-            </div>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
+        </div>
 
         {/* Technical Information */}
-        <Descriptions 
-          title="Technical Information" 
-          bordered 
-          size="small"
-          column={2}
-          style={{ marginBottom: 24 }}
-        >
-          <Descriptions.Item label="Platform" span={1}>
-            <Space>
-              <DesktopOutlined />
-              {examinee.platform}
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item label="Browser" span={1}>
-            {examinee.browserInfo}
-          </Descriptions.Item>
-          <Descriptions.Item label="Session Health" span={2}>
-            <Space direction="vertical" style={{ width: '100%' }}>
-              <Space>
-                <SafetyOutlined style={{ color: getHealthColor(examinee.sessionHealth) }} />
-                <Text strong style={{ color: getHealthColor(examinee.sessionHealth) }}>
-                  {examinee.sessionHealth}
-                </Text>
-              </Space>
-              <Progress 
-                percent={getHealthPercentage(examinee.sessionHealth)}
-                strokeColor={getHealthColor(examinee.sessionHealth)}
-                size="small"
-                showInfo={false}
-              />
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item label="Last Activity" span={2}>
-            {dayjs(examinee.lastActivity).format('YYYY-MM-DD HH:mm:ss')} 
-            <Text type="secondary" style={{ marginLeft: 8 }}>
-              ({dayjs(examinee.lastActivity).fromNow()})
-            </Text>
-          </Descriptions.Item>
-        </Descriptions>
-
-        {/* Activity Timeline */}
-        <Title level={5} style={{ marginBottom: 16 }}>
-          <ClockCircleOutlined style={{ marginRight: 8 }} />
-          Login-Logout Activity Timeline
-        </Title>
-        
-        <div style={{ 
-          backgroundColor: '#fafafa', 
-          padding: 16, 
-          borderRadius: 6,
-          maxHeight: 300,
-          overflowY: 'auto'
-        }}>
-          <Timeline
-            items={examinee.logs.map((log) => ({
-              dot: getTimelineIcon(log.type),
-              children: (
+        <div style={{ marginBottom: '24px' }}>
+          <Title level={5}>Technical Information</Title>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Platform</Text>
+                <div style={{ fontWeight: 500 }}>{examinee.platform}</div>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Session Health</Text>
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text strong>{log.activity}</Text>
-                    <Text type="secondary" style={{ fontSize: 12 }}>
-                      {dayjs(log.timestamp).format('HH:mm:ss')}
-                    </Text>
-                  </div>
-                  {log.details && (
-                    <Text type="secondary" style={{ fontSize: 12, display: 'block', marginTop: 4 }}>
-                      {log.details}
-                    </Text>
-                  )}
+                  <Progress
+                    percent={100}
+                    showInfo={false}
+                    strokeColor="#52c41a"
+                    size="small"
+                  />
+                  <Text style={{ color: '#52c41a', fontSize: '12px' }}>
+                    {examinee.sessionHealth}
+                  </Text>
                 </div>
-              )
-            }))}
-          />
-          
-          {examinee.logs.length === 0 && (
-            <div style={{ textAlign: 'center', padding: 20, color: '#999' }}>
-              <ExclamationCircleOutlined style={{ fontSize: 24, marginBottom: 8 }} />
-              <div>No activity logs available</div>
-            </div>
-          )}
+              </div>
+            </Col>
+            <Col span={12}>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Browser</Text>
+                <div style={{ fontWeight: 500 }}>Chrome 120.0.6099.129</div>
+              </div>
+              <div style={{ marginBottom: '8px' }}>
+                <Text type="secondary">Last Activity</Text>
+                <div style={{ color: '#52c41a', fontSize: '12px' }}>
+                  2025-07-05 09:53:13 (a few seconds ago)
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+
+        {/* Login-Logout Activity Timeline */}
+        <div>
+          <Title level={5}>
+            <ClockCircleOutlined style={{ marginRight: 8 }} />
+            Login-Logout Activity Timeline
+          </Title>
+          <Timeline>
+            {examinee.activityTimeline.map((entry, index) => (
+              <Timeline.Item
+                key={index}
+                dot={
+                  entry.activity.includes('logged in') ? <CheckCircleOutlined style={{ color: '#52c41a' }} /> :
+                  entry.activity.includes('started') ? <PlayCircleOutlined style={{ color: '#1890ff' }} /> :
+                  <EditOutlined style={{ color: '#722ed1' }} />
+                }
+              >
+                <div style={{ marginBottom: '4px' }}>
+                  <Text strong>{entry.activity}</Text>
+                  <Text type="secondary" style={{ float: 'right' }}>
+                    {new Date(entry.timestamp).toLocaleTimeString()}
+                  </Text>
+                </div>
+                <Text type="secondary" style={{ fontSize: '12px' }}>
+                  {entry.details}
+                </Text>
+              </Timeline.Item>
+            ))}
+          </Timeline>
         </div>
       </div>
     </Modal>

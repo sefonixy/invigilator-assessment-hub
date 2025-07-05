@@ -1,17 +1,32 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout, Menu, Typography } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
-import { useAppContext } from './hooks/useAppContext';
-import UserProfile from './components/UserProfile';
 import AssessmentsPage from './components/assessments/AssessmentsPage';
-import TrackSubmissionsPage from './components/submissions/TrackSubmissionsPage';
+import TrackSubmissionsPage from './components/TrackSubmissionsPage';
+import UserProfile from './components/UserProfile';
+import './App.css';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
+
+
 function App() {
-  const { themeMode } = useAppContext();
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
+
+
 
   return (
     <Router>
@@ -20,17 +35,22 @@ function App() {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between',
-          padding: '0 24px',
-          background: themeMode === 'dark' ? '#001529' : '#1890ff'
+          padding: '0 16px',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          height: 64
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
             <Title 
-              level={3} 
+              level={4} 
               style={{ 
                 color: 'white', 
                 margin: 0,
-                marginRight: 48,
-                fontWeight: 600
+                marginRight: 24,
+                fontWeight: 600,
+                textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                whiteSpace: 'nowrap',
+                fontSize: 'clamp(16px, 4vw, 20px)'
               }}
             >
               Invigilator Assessment Hub
@@ -44,13 +64,14 @@ function App() {
                 backgroundColor: 'transparent',
                 borderBottom: 'none',
                 minWidth: 0,
-                flex: 1
+                flex: 1,
+                display: windowWidth < 768 ? 'none' : 'flex'
               }}
               items={[
                 {
                   key: 'assessments',
                   icon: <FileTextOutlined />,
-                  label: 'Downloaded Assessments'
+                  label: windowWidth < 900 ? '' : 'Downloaded Assessments'
                 }
               ]}
             />
@@ -61,7 +82,7 @@ function App() {
         
         <Content style={{ 
           padding: 0,
-          background: themeMode === 'dark' ? '#141414' : '#f0f2f5'
+          background: '#f0f2f5'
         }}>
           <Routes>
             <Route path="/" element={<AssessmentsPage />} />
@@ -73,12 +94,14 @@ function App() {
 
         <Footer style={{ 
           textAlign: 'center',
-          background: themeMode === 'dark' ? '#001529' : '#f0f2f5',
-          color: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)'
+          background: '#f0f2f5',
+          color: 'rgba(0, 0, 0, 0.65)'
         }}>
           Invigilator Assessment Hub ©2024 Created with React & Ant Design
         </Footer>
       </Layout>
+
+
     </Router>
   );
 }

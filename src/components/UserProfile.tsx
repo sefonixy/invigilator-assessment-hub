@@ -53,14 +53,16 @@ const UserProfile: React.FC = () => {
       key: 'profile',
       icon: <UserOutlined />,
       label: (
-        <span style={{ fontSize: isCompact ? '13px' : '14px' }}>
+        <span style={{ fontSize: isCompact ? '13px' : '14px', padding: '4px 0' }}>
           View Profile
         </span>
       ),
       onClick: () => setProfileModalOpen(true),
+      style: { padding: '12px 16px' },
     },
     {
       type: 'divider',
+      style: { margin: '8px 0' },
     },
     {
       key: 'theme',
@@ -70,7 +72,9 @@ const UserProfile: React.FC = () => {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          fontSize: isCompact ? '13px' : '14px'
+          fontSize: isCompact ? '13px' : '14px',
+          padding: '4px 0',
+          width: '100%'
         }}>
           <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
           <Switch
@@ -85,6 +89,7 @@ const UserProfile: React.FC = () => {
         </div>
       ),
       onClick: () => {},
+      style: { padding: '12px 16px' },
     },
     {
       key: 'compact',
@@ -94,7 +99,9 @@ const UserProfile: React.FC = () => {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          fontSize: isCompact ? '13px' : '14px'
+          fontSize: isCompact ? '13px' : '14px',
+          padding: '4px 0',
+          width: '100%'
         }}>
           <span>{isCompact ? 'Comfortable Mode' : 'Compact Mode'}</span>
           <Switch
@@ -109,6 +116,7 @@ const UserProfile: React.FC = () => {
         </div>
       ),
       onClick: () => {},
+      style: { padding: '12px 16px' },
     },
     {
       key: 'language',
@@ -118,14 +126,16 @@ const UserProfile: React.FC = () => {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          fontSize: isCompact ? '13px' : '14px'
+          fontSize: isCompact ? '13px' : '14px',
+          padding: '4px 0',
+          width: '100%'
         }}>
           <span>Language</span>
           <Select
             value={language}
             onChange={changeLanguage}
             size={isCompact ? 'small' : 'middle'}
-            style={{ width: 70 }}
+            style={{ width: 80 }}
             options={[
               { value: 'en', label: 'EN' },
               { value: 'ar', label: 'AR' }
@@ -135,9 +145,11 @@ const UserProfile: React.FC = () => {
         </div>
       ),
       onClick: () => {},
+      style: { padding: '12px 16px' },
     },
     {
       type: 'divider',
+      style: { margin: '8px 0' },
     },
     {
       key: 'logout',
@@ -145,12 +157,14 @@ const UserProfile: React.FC = () => {
       label: (
         <span style={{ 
           color: '#ff4d4f',
-          fontSize: isCompact ? '13px' : '14px'
+          fontSize: isCompact ? '13px' : '14px',
+          padding: '4px 0'
         }}>
           Logout
         </span>
       ),
       onClick: handleLogout,
+      style: { padding: '12px 16px' },
     },
   ];
 
@@ -161,6 +175,10 @@ const UserProfile: React.FC = () => {
         trigger={['click']}
         placement="bottomRight"
         arrow={{ pointAtCenter: true }}
+        overlayStyle={{
+          minWidth: 240,
+          width: 'auto'
+        }}
       >
         <Button
           type="text"

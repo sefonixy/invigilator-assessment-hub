@@ -4,20 +4,14 @@ import {
   Form,
   Input,
   Select,
-  Button,
-  Space,
   Divider,
   Typography,
   Avatar,
   Row,
-  Col,
-  notification
+  Col
 } from 'antd';
 import { 
-  UserOutlined, 
-  LockOutlined, 
-  LogoutOutlined,
-  CloseOutlined
+  UserOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -177,34 +171,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             />
           </Form.Item>
 
-          {/* Actions Section */}
-          <Divider orientation="left">
-            <Text strong>{t('profile.actions')}</Text>
-          </Divider>
 
-          <Space direction="vertical" style={{ width: '100%' }}>
-            <Space wrap>
-              <Button
-                icon={<LockOutlined />}
-                onClick={() => notification.info({ message: 'Change Password feature coming soon!' })}
-              >
-                {t('profile.buttons.changePassword')}
-              </Button>
-              <Button
-                danger
-                icon={<LogoutOutlined />}
-                onClick={() => notification.info({ message: 'Logout feature coming soon!' })}
-              >
-                {t('profile.buttons.logout')}
-              </Button>
-              <Button
-                icon={<CloseOutlined />}
-                onClick={onClose}
-              >
-                {t('profile.buttons.close')}
-              </Button>
-            </Space>
-          </Space>
         </Form>
       </div>
     </Modal>

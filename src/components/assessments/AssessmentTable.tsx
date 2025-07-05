@@ -1,197 +1,152 @@
 import React from 'react';
-import { Table, Tag, Button, Space, Tooltip, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import type { Key } from 'antd/es/table/interface';
-import { 
-  SyncOutlined, 
-  UsergroupAddOutlined,
-  ClockCircleOutlined,
-  CheckCircleOutlined,
-  PauseCircleOutlined,
-  ExclamationCircleOutlined
-} from '@ant-design/icons';
-import dayjs from 'dayjs';
-import type { 
-  AssessmentTableProps, 
-  AssessmentWithDetails
-} from '../../types/assessment';
-import { ASSESSMENT_STATUS, ASSESSMENT_ACTIONS } from '../../types/assessment';
+import { Table, Tag, Button, Space } from 'antd';
+import { EyeOutlined, SyncOutlined } from '@ant-design/icons';
+import type { Assessment } from '../../types/data';
 
-const { Text } = Typography;
+interface AssessmentTableProps {
+  assessments: Assessment[];
+  loading?: boolean;
+  onAction: (action: string, assessment: Assessment) => void;
+  selectedRowKeys: string[];
+  onSelectionChange: (selectedKeys: string[]) => void;
+}
 
 const AssessmentTable: React.FC<AssessmentTableProps> = ({
   assessments,
   loading = false,
   onAction,
-  selectedRowKeys = [],
+  selectedRowKeys,
   onSelectionChange
 }) => {
 
-  // Status tag rendering
-  const renderStatusTag = (status: string) => {
-    const statusConfig = {
-      [ASSESSMENT_STATUS.SCHEDULED]: { color: 'blue', icon: <ClockCircleOutlined /> },
-      [ASSESSMENT_STATUS.IN_PROGRESS]: { color: 'orange', icon: <SyncOutlined spin /> },
-      [ASSESSMENT_STATUS.COMPLETED]: { color: 'green', icon: <CheckCircleOutlined /> },
-      [ASSESSMENT_STATUS.CANCELLED]: { color: 'red', icon: <ExclamationCircleOutlined /> },
-      [ASSESSMENT_STATUS.PAUSED]: { color: 'purple', icon: <PauseCircleOutlined /> }
-    };
-
-    const config = statusConfig[status as keyof typeof statusConfig];
-    const displayText = status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-
-    return (
-      <Tag color={config?.color} icon={config?.icon}>
-        {displayText}
-      </Tag>
-    );
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Completed':
+        return 'success';
+      case 'In Progress':
+        return 'processing';
+      case 'Scheduled':
+        return 'default';
+      default:
+        return 'default';
+    }
   };
 
-  // Table columns
-  const columns: ColumnsType<AssessmentWithDetails> = [
+  const columns = [
     {
       title: 'Area Name',
-      dataIndex: ['area', 'name'],
+      dataIndex: 'areaName',
       key: 'areaName',
-      width: 120,
-      sorter: (a, b) => a.area.name.localeCompare(b.area.name),
-      render: (text) => <Text strong>{text}</Text>
+      sorter: (a: Assessment, b: Assessment) => a.areaName.localeCompare(b.areaName),
+      render: (text: string) => <span style={{ fontWeight: 500 }}>{text}</span>
     },
     {
       title: 'Assessment Name',
-      dataIndex: 'name',
+      dataIndex: 'assessmentName',
       key: 'assessmentName',
-      width: 200,
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      render: (text, record) => (
+      sorter: (a: Assessment, b: Assessment) => a.assessmentName.localeCompare(b.assessmentName),
+      render: (text: string, record: Assessment) => (
         <div>
-          <Text strong>{text}</Text>
-          <br />
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            {record.course.code} - {record.course.name}
-          </Text>
+          <div style={{ fontWeight: 500, fontSize: '14px' }}>{text}</div>
+          <div style={{ color: '#666', fontSize: '12px' }}>{record.course}</div>
         </div>
       )
     },
     {
       title: 'Assessment Start Date',
-      dataIndex: 'startDate',
-      key: 'startDate',
-      width: 180,
-      sorter: (a, b) => dayjs(a.startDate).unix() - dayjs(b.startDate).unix(),
-      render: (date) => (
+      dataIndex: 'assessmentStartDate',
+      key: 'assessmentStartDate',
+      sorter: (a: Assessment, b: Assessment) => new Date(a.assessmentStartDate).getTime() - new Date(b.assessmentStartDate).getTime(),
+      render: (date: string) => (
         <div>
-          <div>{dayjs(date).format('YYYY-MM-DD')}</div>
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            {dayjs(date).format('HH:mm A')}
-          </Text>
+          <div>{new Date(date).toLocaleDateString()}</div>
+          <div style={{ color: '#666', fontSize: '12px' }}>
+            {new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       )
     },
     {
       title: 'Assessment End Date',
-      dataIndex: 'endDate',
-      key: 'endDate',
-      width: 180,
-      sorter: (a, b) => dayjs(a.endDate).unix() - dayjs(b.endDate).unix(),
-      render: (date) => (
+      dataIndex: 'assessmentEndDate',
+      key: 'assessmentEndDate',
+      sorter: (a: Assessment, b: Assessment) => new Date(a.assessmentEndDate).getTime() - new Date(b.assessmentEndDate).getTime(),
+      render: (date: string) => (
         <div>
-          <div>{dayjs(date).format('YYYY-MM-DD')}</div>
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            {dayjs(date).format('HH:mm A')}
-          </Text>
+          <div>{new Date(date).toLocaleDateString()}</div>
+          <div style={{ color: '#666', fontSize: '12px' }}>
+            {new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       )
     },
     {
       title: 'Assessment Status',
-      dataIndex: 'status',
-      key: 'status',
-      width: 140,
-      align: 'center',
+      dataIndex: 'assessmentStatus',
+      key: 'assessmentStatus',
       filters: [
-        { text: 'Scheduled', value: ASSESSMENT_STATUS.SCHEDULED },
-        { text: 'In Progress', value: ASSESSMENT_STATUS.IN_PROGRESS },
-        { text: 'Completed', value: ASSESSMENT_STATUS.COMPLETED },
-        { text: 'Cancelled', value: ASSESSMENT_STATUS.CANCELLED },
-        { text: 'Paused', value: ASSESSMENT_STATUS.PAUSED }
+        { text: 'Completed', value: 'Completed' },
+        { text: 'In Progress', value: 'In Progress' },
+        { text: 'Scheduled', value: 'Scheduled' }
       ],
-      onFilter: (value, record) => record.status === value,
-      render: (status) => renderStatusTag(status)
+      onFilter: (value: unknown, record: Assessment) => record.assessmentStatus === value,
+      render: (status: string) => (
+        <Tag color={getStatusColor(status)}>{status}</Tag>
+      )
     },
     {
       title: 'Monitor Examinees',
-      key: 'monitorExaminees',
-      width: 130,
-      align: 'center',
-      render: (_, record) => (
-        <Tooltip title={`${record.examineesCount} examinees total`}>
-          <Button
-            type="link"
-            icon={<UsergroupAddOutlined />}
-            onClick={() => onAction(ASSESSMENT_ACTIONS.MONITOR_EXAMINEES, record)}
-            style={{ padding: 0 }}
-          >
-            Monitor Examinees
-          </Button>
-        </Tooltip>
+      key: 'monitor',
+      align: 'center' as const,
+      render: (_: unknown, record: Assessment) => (
+        <Button
+          type="link"
+          icon={<EyeOutlined />}
+          onClick={() => onAction('monitor_examinees', record)}
+          disabled={record.examinees.length === 0}
+        >
+          Monitor Examinees
+        </Button>
       )
     },
     {
       title: 'Action',
       key: 'action',
-      width: 130,
-      align: 'center',
-      render: (_, record) => (
-        <Space size="small">
-          <Tooltip title="Sync Submissions">
-            <Button
-              type="link"
-              icon={<SyncOutlined />}
-              onClick={() => onAction(ASSESSMENT_ACTIONS.SYNC_SUBMISSIONS, record)}
-              disabled={record.status === ASSESSMENT_STATUS.CANCELLED}
-              style={{ padding: 0 }}
-            >
-              Sync Submissions
-            </Button>
-          </Tooltip>
+      align: 'center' as const,
+      render: (_: unknown, record: Assessment) => (
+        <Space>
+          <Button
+            type="link"
+            icon={<SyncOutlined />}
+            onClick={() => onAction('sync_submissions', record)}
+          >
+            Sync Submissions
+          </Button>
         </Space>
       )
     }
   ];
 
-  // Row selection configuration
-  const rowSelection = onSelectionChange ? {
-    selectedRowKeys,
-    onChange: (selectedRowKeys: Key[]) => {
-      onSelectionChange(selectedRowKeys.map(key => String(key)));
-    },
-    type: 'checkbox' as const
-  } : undefined;
-
   return (
-    <Table<AssessmentWithDetails>
+    <Table
       columns={columns}
       dataSource={assessments}
       rowKey="id"
       loading={loading}
-      rowSelection={rowSelection}
-      scroll={{ x: 1200 }}
       pagination={{
-        total: assessments.length,
         pageSize: 10,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total, range) =>
-          `${range[0]}-${range[1]} of ${total} assessments`,
-        pageSizeOptions: ['10', '20', '50', '100']
+        showTotal: (total, range) => 
+          `${range[0]}-${range[1]} of ${total} assessments`
       }}
+             rowSelection={{
+         selectedRowKeys,
+         onChange: (keys) => onSelectionChange(keys.map(k => String(k))),
+         type: 'checkbox'
+       }}
+      scroll={{ x: 1200 }}
       size="middle"
-      bordered
-      style={{
-        backgroundColor: 'white',
-        borderRadius: 6
-      }}
     />
   );
 };

@@ -1,83 +1,48 @@
 import React, { useMemo } from 'react';
-import { Row, Col, Select, Button, Space } from 'antd';
-import { ClearOutlined, FilterOutlined } from '@ant-design/icons';
-import type { 
-  AssessmentFiltersProps
-} from '../../types/assessment';
-import { ASSESSMENT_STATUS, type AssessmentStatus } from '../../types/assessment';
-import { getProgramsByArea, getCoursesByProgram } from '../../data/assessmentData';
+import { Row, Col, Select, Input, Button } from 'antd';
+import { ClearOutlined, SearchOutlined } from '@ant-design/icons';
+import type { Assessment } from '../../types/data';
 
-const AssessmentFiltersComponent: React.FC<AssessmentFiltersProps> = ({
-  areas,
-  programs,
-  courses,
+interface AssessmentFiltersProps {
+  assessments: Assessment[];
+  filters: {
+    areaName?: string;
+    program?: string;
+    course?: string;
+    status?: string;
+    searchTerm?: string;
+  };
+  onFiltersChange: (filters: Partial<{
+    areaName?: string;
+    program?: string;
+    course?: string;
+    status?: string;
+    searchTerm?: string;
+  }>) => void;
+  onClearFilters: () => void;
+  loading?: boolean;
+}
+
+const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
+  assessments,
   filters,
   onFiltersChange,
   onClearFilters,
   loading = false
 }) => {
-  // Get filtered programs based on selected area
-  const filteredPrograms = useMemo(() => {
-    if (!filters.areaId) return programs;
-    return getProgramsByArea(filters.areaId);
-  }, [filters.areaId, programs]);
 
-  // Get filtered courses based on selected program
-  const filteredCourses = useMemo(() => {
-    if (!filters.programId) return courses;
-    return getCoursesByProgram(filters.programId);
-  }, [filters.programId, courses]);
+  // Extract unique values from assessments
+  const { areas, programs, courses, statuses } = useMemo(() => {
+    const areas = [...new Set(assessments.map(a => a.areaName))];
+    const programs = [...new Set(assessments.map(a => a.program))];
+    const courses = [...new Set(assessments.map(a => a.course))];
+    const statuses = [...new Set(assessments.map(a => a.assessmentStatus))];
+    
+    return { areas, programs, courses, statuses };
+  }, [assessments]);
 
-  // Status options
-  const statusOptions = [
-    { label: 'Scheduled', value: ASSESSMENT_STATUS.SCHEDULED },
-    { label: 'In Progress', value: ASSESSMENT_STATUS.IN_PROGRESS },
-    { label: 'Completed', value: ASSESSMENT_STATUS.COMPLETED },
-    { label: 'Cancelled', value: ASSESSMENT_STATUS.CANCELLED },
-    { label: 'Paused', value: ASSESSMENT_STATUS.PAUSED }
-  ];
-
-  // Area options
-  const areaOptions = areas.map(area => ({
-    label: area.name,
-    value: area.id
-  }));
-
-  // Program options
-  const programOptions = filteredPrograms.map(program => ({
-    label: program.name,
-    value: program.id
-  }));
-
-  // Course options
-  const courseOptions = filteredCourses.map(course => ({
-    label: `${course.code} - ${course.name}`,
-    value: course.id
-  }));
-
-  const handleAreaChange = (areaId?: string) => {
-    onFiltersChange({
-      areaId,
-      // Clear dependent filters when area changes
-      programId: undefined,
-      courseId: undefined
-    });
-  };
-
-  const handleProgramChange = (programId?: string) => {
-    onFiltersChange({
-      programId,
-      // Clear dependent filter when program changes
-      courseId: undefined
-    });
-  };
-
-  const handleCourseChange = (courseId?: string) => {
-    onFiltersChange({ courseId });
-  };
-
-  const handleStatusChange = (status?: AssessmentStatus) => {
-    onFiltersChange({ status });
+  const handleFilterChange = (field: string, value: string | undefined) => {
+    onFiltersChange({ [field]: value });
   };
 
   const hasActiveFilters = Object.values(filters).some(value => 
@@ -86,13 +51,12 @@ const AssessmentFiltersComponent: React.FC<AssessmentFiltersProps> = ({
 
   return (
     <div style={{ 
-      padding: '16px', 
+      padding: '20px', 
       backgroundColor: '#fafafa',
-      borderRadius: 6,
-      marginBottom: 16
+      borderRadius: '8px 8px 0 0'
     }}>
       <Row gutter={[16, 16]} align="middle">
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={6} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -105,17 +69,21 @@ const AssessmentFiltersComponent: React.FC<AssessmentFiltersProps> = ({
             <Select
               placeholder="Select Area"
               style={{ width: '100%' }}
-              value={filters.areaId}
-              onChange={handleAreaChange}
+              value={filters.areaName}
+              onChange={(value) => handleFilterChange('areaName', value)}
               allowClear
               disabled={loading}
-              options={areaOptions}
-              suffixIcon={<FilterOutlined />}
-            />
+            >
+              {areas.map(area => (
+                <Select.Option key={area} value={area}>
+                  {area}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         </Col>
 
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={6} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -128,17 +96,21 @@ const AssessmentFiltersComponent: React.FC<AssessmentFiltersProps> = ({
             <Select
               placeholder="Select Program"
               style={{ width: '100%' }}
-              value={filters.programId}
-              onChange={handleProgramChange}
+              value={filters.program}
+              onChange={(value) => handleFilterChange('program', value)}
               allowClear
-              disabled={loading || !filters.areaId}
-              options={programOptions}
-              suffixIcon={<FilterOutlined />}
-            />
+              disabled={loading}
+            >
+              {programs.map(program => (
+                <Select.Option key={program} value={program}>
+                  {program}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         </Col>
 
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={6} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -151,17 +123,21 @@ const AssessmentFiltersComponent: React.FC<AssessmentFiltersProps> = ({
             <Select
               placeholder="Select Course"
               style={{ width: '100%' }}
-              value={filters.courseId}
-              onChange={handleCourseChange}
+              value={filters.course}
+              onChange={(value) => handleFilterChange('course', value)}
               allowClear
-              disabled={loading || !filters.programId}
-              options={courseOptions}
-              suffixIcon={<FilterOutlined />}
-            />
+              disabled={loading}
+            >
+              {courses.map(course => (
+                <Select.Option key={course} value={course}>
+                  {course}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         </Col>
 
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={6} lg={6}>
           <div>
             <label style={{ 
               display: 'block', 
@@ -175,35 +151,45 @@ const AssessmentFiltersComponent: React.FC<AssessmentFiltersProps> = ({
               placeholder="Select Status"
               style={{ width: '100%' }}
               value={filters.status}
-              onChange={handleStatusChange}
+              onChange={(value) => handleFilterChange('status', value)}
               allowClear
               disabled={loading}
-              options={statusOptions}
-              suffixIcon={<FilterOutlined />}
-            />
+            >
+              {statuses.map(status => (
+                <Select.Option key={status} value={status}>
+                  {status}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         </Col>
       </Row>
 
-      {hasActiveFilters && (
-        <Row style={{ marginTop: 12 }}>
-          <Col span={24}>
-            <Space align="center" style={{ justifyContent: 'flex-end', width: '100%' }}>
-              <Button
-                type="default"
-                icon={<ClearOutlined />}
-                onClick={onClearFilters}
-                disabled={loading}
-                size="small"
-              >
-                Clear Filters
-              </Button>
-            </Space>
+      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+        <Col xs={24} sm={12} md={8}>
+          <Input
+            placeholder="Search assessments..."
+            value={filters.searchTerm}
+            onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+            prefix={<SearchOutlined />}
+            allowClear
+          />
+        </Col>
+        
+        {hasActiveFilters && (
+          <Col xs={24} sm={12} md={8}>
+            <Button
+              icon={<ClearOutlined />}
+              onClick={onClearFilters}
+              disabled={loading}
+            >
+              Clear Filters
+            </Button>
           </Col>
-        </Row>
-      )}
+        )}
+      </Row>
     </div>
   );
 };
 
-export default AssessmentFiltersComponent; 
+export default AssessmentFilters; 

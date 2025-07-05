@@ -1,0 +1,65 @@
+/* Profile dropdown styling */
+.profile-dropdown .ant-dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.08), 0 9px 28px 0 rgba(0, 0, 0, 0.05), 0 3px 6px -4px rgba(0, 0, 0, 0.12);
+  border: 1px solid #f0f0f0;
+  background: white;
+  min-width: 200px;
+}
+
+.profile-dropdown .ant-dropdown-menu-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.profile-dropdown .ant-dropdown-menu-item:hover {
+  background: #f5f5f5;
+  color: #667eea;
+}
+
+.profile-dropdown .ant-dropdown-menu-item-danger:hover {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+.profile-dropdown .ant-dropdown-menu-item .anticon {
+  margin-right: 8px;
+  color: #8c8c8c;
+}
+
+.profile-dropdown .ant-dropdown-menu-item:hover .anticon {
+  color: inherit;
+}
+
+/* Ensure dropdown appears above other elements */
+.ant-dropdown {
+  z-index: 1050 !important;
+}
+
+/* Additional styling for better visibility */
+.ant-dropdown-menu-item-divider {
+  margin: 4px 0;
+}
+
+/* Override default antd styles if needed */
+.ant-layout-header {
+  z-index: 1000;
+}
+
+/* Ensure header profile section is clickable */
+.ant-dropdown-trigger {
+  cursor: pointer !important;
+}
+
+/* Default app styles (keeping minimal) */
+#root {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} 

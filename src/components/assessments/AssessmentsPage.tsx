@@ -1,38 +1,32 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Card, Typography, Space, notification } from 'antd';
+import { Card, Typography, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import AssessmentFiltersComponent from './AssessmentFilters';
 import AssessmentTable from './AssessmentTable';
-import type { 
-  AssessmentFilters, 
-  AssessmentWithDetails,
-  AssessmentActions
-} from '../../types/assessment';
-import { 
-  getMockAssessmentsWithDetails,
-  mockAreas,
-  mockPrograms,
-  mockCourses,
-  filterAssessmentsByArea,
-  filterAssessmentsByStatus,
-  filterAssessmentsByProgram,
-  filterAssessmentsByCourse
-} from '../../data/assessmentData';
-import { ASSESSMENT_ACTIONS } from '../../types/assessment';
+import { mockAssessmentsData } from '../../services/mockData';
+import type { Assessment } from '../../types/data';
 
 const { Title } = Typography;
+
+interface AssessmentFilters {
+  areaName?: string;
+  program?: string;
+  course?: string;
+  status?: string;
+  searchTerm?: string;
+}
 
 const AssessmentsPage: React.FC = () => {
   const navigate = useNavigate();
   
   // State management
   const [filters, setFilters] = useState<AssessmentFilters>({});
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   // Get all assessments data
   const allAssessments = useMemo(() => {
-    return getMockAssessmentsWithDetails();
+    return mockAssessmentsData;
   }, []);
 
   // Apply filters to assessments
@@ -40,33 +34,33 @@ const AssessmentsPage: React.FC = () => {
     let result = [...allAssessments];
 
     // Apply area filter
-    if (filters.areaId) {
-      result = filterAssessmentsByArea(result, filters.areaId);
+    if (filters.areaName) {
+      result = result.filter(assessment => assessment.areaName === filters.areaName);
     }
 
     // Apply program filter
-    if (filters.programId) {
-      result = filterAssessmentsByProgram(result, filters.programId);
+    if (filters.program) {
+      result = result.filter(assessment => assessment.program === filters.program);
     }
 
     // Apply course filter
-    if (filters.courseId) {
-      result = filterAssessmentsByCourse(result, filters.courseId);
+    if (filters.course) {
+      result = result.filter(assessment => assessment.course === filters.course);
     }
 
     // Apply status filter
     if (filters.status) {
-      result = filterAssessmentsByStatus(result, filters.status);
+      result = result.filter(assessment => assessment.assessmentStatus === filters.status);
     }
 
-    // Apply search term filter (if implemented)
+    // Apply search term filter
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
       result = result.filter(assessment => 
-        assessment.name.toLowerCase().includes(searchLower) ||
-        assessment.area.name.toLowerCase().includes(searchLower) ||
-        assessment.course.name.toLowerCase().includes(searchLower) ||
-        assessment.program.name.toLowerCase().includes(searchLower)
+        assessment.assessmentName.toLowerCase().includes(searchLower) ||
+        assessment.areaName.toLowerCase().includes(searchLower) ||
+        assessment.course.toLowerCase().includes(searchLower) ||
+        assessment.program.toLowerCase().includes(searchLower)
       );
     }
 
@@ -84,69 +78,19 @@ const AssessmentsPage: React.FC = () => {
   }, []);
 
   // Handle assessment actions
-  const handleAction = useCallback(async (action: AssessmentActions, assessment: AssessmentWithDetails) => {
-    setLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      switch (action) {
-        case ASSESSMENT_ACTIONS.MONITOR_EXAMINEES:
-          // Navigate to track submissions page
-          navigate(`/exam/${assessment.id}/submissions`);
-          return; // Don't show loading state for navigation
-          
-        case ASSESSMENT_ACTIONS.SYNC_SUBMISSIONS:
-          notification.success({
-            message: 'Sync Submissions',
-            description: `Synced submissions for "${assessment.name}"`
-          });
-          break;
-          
-        case ASSESSMENT_ACTIONS.VIEW_DETAILS:
-          notification.info({
-            message: 'View Details',
-            description: `Viewing details for "${assessment.name}"`
-          });
-          break;
-          
-        case ASSESSMENT_ACTIONS.EDIT_ASSESSMENT:
-          notification.info({
-            message: 'Edit Assessment',
-            description: `Editing "${assessment.name}"`
-          });
-          break;
-          
-        case ASSESSMENT_ACTIONS.DOWNLOAD_REPORTS:
-          notification.success({
-            message: 'Download Reports',
-            description: `Downloading reports for "${assessment.name}"`
-          });
-          break;
-          
-        case ASSESSMENT_ACTIONS.EXPORT_DATA:
-          notification.success({
-            message: 'Export Data',
-            description: `Exporting data for "${assessment.name}"`
-          });
-          break;
-          
-        default:
-          notification.warning({
-            message: 'Unknown Action',
-            description: 'The requested action is not yet implemented'
-          });
-      }
-    } catch {
-      notification.error({
-        message: 'Action Failed',
-        description: 'Failed to perform the requested action. Please try again.'
-      });
-    } finally {
-      setLoading(false);
+  const handleAction = useCallback((action: string, assessment: Assessment) => {
+    switch (action) {
+      case 'monitor_examinees':
+        // Navigate to track submissions page
+        navigate(`/exam/${assessment.id}/submissions`);
+        break;
+      case 'sync_submissions':
+        console.log(`Syncing submissions for "${assessment.assessmentName}"`);
+        break;
+      default:
+        console.log(`Action ${action} for assessment:`, assessment.assessmentName);
     }
-  }, []);
+  }, [navigate]);
 
   // Handle row selection
   const handleSelectionChange = useCallback((selectedKeys: string[]) => {
@@ -183,9 +127,7 @@ const AssessmentsPage: React.FC = () => {
           bodyStyle={{ padding: 0 }}
         >
           <AssessmentFiltersComponent
-            areas={mockAreas}
-            programs={mockPrograms}
-            courses={mockCourses}
+            assessments={allAssessments}
             filters={filters}
             onFiltersChange={handleFiltersChange}
             onClearFilters={handleClearFilters}

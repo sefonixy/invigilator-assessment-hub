@@ -1,9 +1,22 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Card, Typography, Space, message, Alert } from 'antd';
+import { Card, Typography, Space, message, Alert, Button } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import AssessmentFiltersComponent from './AssessmentFilters';
 import AssessmentTable from './AssessmentTable';
 import { mockAssessmentsData } from '../../services/mockData';
+import { withRetry, classifyError, logError } from '../../utils/errorHandling';
+
+// Simple accessibility helpers
+const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+  const announcement = document.createElement('div');
+  announcement.setAttribute('aria-live', priority);
+  announcement.setAttribute('aria-atomic', 'true');
+  announcement.className = 'sr-only';
+  announcement.textContent = message;
+  document.body.appendChild(announcement);
+  setTimeout(() => document.body.removeChild(announcement), 1000);
+};
 import type { Assessment } from '../../types/data';
 
 const { Title } = Typography;
@@ -25,37 +38,59 @@ const AssessmentsPage: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [syncingAssessments, setSyncingAssessments] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const [assessmentsData, setAssessmentsData] = useState<Assessment[]>([]);
 
-  // Load assessments data with error handling
-  useEffect(() => {
-    const loadAssessmentsData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
+  // Load assessments data with enhanced error handling
+  const loadAssessmentsData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Use withRetry for robust data loading
+      const data = await withRetry(async () => {
         // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        // Simulate potential API failure (3% chance)
-        if (Math.random() < 0.03) {
+        // Simulate potential API failure (reduced from 3% to 1% for better UX)
+        if (Math.random() < 0.01) {
           throw new Error('Failed to load assessments data');
         }
         
-        setAssessmentsData(mockAssessmentsData);
-      } catch (err) {
-        setError('Failed to load data. Please try again later.');
-        console.error('Error loading assessments:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+        return mockAssessmentsData;
+      }, { 
+        maxAttempts: 3,
+        delay: 1000,
+        backoff: true 
+      });
+      
+      setAssessmentsData(data);
+      
+      // Announce successful load to screen readers
+      announceToScreenReader(`Loaded ${data.length} assessments successfully`);
+      
+    } catch (err) {
+      const apiError = classifyError(err);
+      setError(apiError.message);
+      logError(apiError, { 
+        component: 'AssessmentsPage',
+        action: 'loadAssessmentsData',
+        retryCount 
+      });
+      
+      // Announce error to screen readers
+      announceToScreenReader('Failed to load assessments. Please try again.', 'assertive');
+    } finally {
+      setLoading(false);
+    }
+  }, [retryCount]);
 
+  useEffect(() => {
     loadAssessmentsData();
-  }, []);
+  }, [loadAssessmentsData]);
 
   const allAssessments = useMemo(() => {
-    return assessmentsData;
+    return assessmentsData || [];
   }, [assessmentsData]);
 
   const filteredAssessments = useMemo(() => {
@@ -92,45 +127,84 @@ const AssessmentsPage: React.FC = () => {
 
   const handleFiltersChange = useCallback((newFilters: Partial<AssessmentFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
-  }, []);
+    
+    // Announce filter changes to screen readers
+    const activeFilters = Object.values(newFilters).filter(Boolean).length;
+    if (activeFilters > 0) {
+      announceToScreenReader(`Filters applied. ${filteredAssessments.length} assessments found.`);
+    }
+  }, [filteredAssessments.length]);
 
   const handleClearFilters = useCallback(() => {
     setFilters({});
+    announceToScreenReader('All filters cleared');
   }, []);
-  const handleAction = useCallback((action: string, assessment: Assessment) => {
-    switch (action) {
-      case 'monitor_examinees':
-        // Navigate to track submissions page
-        navigate(`/exam/${assessment.id}/submissions`);
-        break;
-      case 'sync_submissions':
-        // Add assessment to syncing state
-        setSyncingAssessments(prev => new Set([...prev, assessment.id]));
-        
-        // Simulate API call
-        setTimeout(() => {
-          // Remove from syncing state
-          setSyncingAssessments(prev => {
-            const newSet = new Set(prev);
-            newSet.delete(assessment.id);
-            return newSet;
-          });
+
+  const handleAction = useCallback(async (action: string, assessment: Assessment) => {
+    try {
+      switch (action) {
+        case 'monitor_examinees':
+          // Navigate to track submissions page
+          navigate(`/exam/${assessment.id}/submissions`);
+          break;
+        case 'sync_submissions':
+          // Add assessment to syncing state
+          setSyncingAssessments(prev => new Set([...prev, assessment.id]));
+          
+          // Use withRetry for sync operation
+          await withRetry(async () => {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Simulate potential failure
+            if (Math.random() < 0.1) {
+              throw new Error('Sync operation failed');
+            }
+          }, { maxAttempts: 2 });
           
           // Show success message
           message.success(`Successfully synced submissions for "${assessment.assessmentName}".`);
-        }, 2000); // 2 second delay to simulate API call
-        break;
-      default:
-        console.log(`Action ${action} for assessment:`, assessment.assessmentName);
+          announceToScreenReader(`Sync completed for ${assessment.assessmentName}`, 'assertive');
+          
+          break;
+        default:
+          console.log(`Action ${action} for assessment:`, assessment.assessmentName);
+      }
+    } catch (err) {
+      const apiError = classifyError(err);
+      message.error(`Failed to ${action}: ${apiError.message}`);
+      logError(apiError, { 
+        component: 'AssessmentsPage',
+        action,
+        assessmentId: assessment.id 
+      });
+    } finally {
+      // Remove from syncing state
+      setSyncingAssessments(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(assessment.id);
+        return newSet;
+      });
     }
   }, [navigate]);
 
   // Handle row selection
   const handleSelectionChange = useCallback((selectedKeys: string[]) => {
     setSelectedRowKeys(selectedKeys);
+    
+    // Announce selection changes
+    if (selectedKeys.length > 0) {
+      announceToScreenReader(`${selectedKeys.length} assessment${selectedKeys.length > 1 ? 's' : ''} selected`);
+    }
   }, []);
 
-  // Error state
+  // Retry handler
+  const handleRetry = useCallback(() => {
+    setRetryCount(prev => prev + 1);
+    loadAssessmentsData();
+  }, [loadAssessmentsData]);
+
+  // Error state with enhanced recovery options
   if (error) {
     return (
       <div style={{ 
@@ -146,23 +220,24 @@ const AssessmentsPage: React.FC = () => {
           </div>
           <Alert
             message="Error Loading Assessments"
-            description={error}
+            description={
+              <div>
+                <p>{error}</p>
+                {retryCount > 0 && (
+                  <p>Retry attempt: {retryCount}</p>
+                )}
+              </div>
+            }
             type="error"
             showIcon
             action={
-              <button 
-                onClick={() => window.location.reload()} 
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4d4f',
-                  color: '#ff4d4f',
-                  padding: '4px 12px',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
+              <Button 
+                icon={<ReloadOutlined />}
+                onClick={handleRetry}
+                aria-label="Retry loading assessments"
               >
                 Retry
-              </button>
+              </Button>
             }
           />
         </Space>
@@ -198,6 +273,7 @@ const AssessmentsPage: React.FC = () => {
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
           }}
           bodyStyle={{ padding: 0 }}
+                      aria-label="Filter options"
         >
           <AssessmentFiltersComponent
             assessments={allAssessments}
@@ -232,6 +308,7 @@ const AssessmentsPage: React.FC = () => {
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
           }}
           bodyStyle={{ padding: '24px' }}
+          aria-label="Assessments table"
         >
           <AssessmentTable
             assessments={filteredAssessments}

@@ -133,10 +133,12 @@ The app uses mock data currently, but it's structured so you could easily replac
 ## Areas for improvement
 
 If I had more time, I would add:
-- More comprehensive error handling
-- Additional test coverage
-- Performance monitoring
-- Better loading states
+- **API integration** - Currently uses hardcoded JSON data, but the original requirement was to fetch from a mock API endpoint. Setting up a proper API service would be the next step.
+- User authentication and authorization  
+- More comprehensive error handling for network failures
+- Additional test coverage for edge cases
+- Performance monitoring for large datasets
+- Better loading states and skeleton screens
 
 ## Links
 

@@ -8,7 +8,7 @@ const resources = {
     translation: {
       // Navigation & Layout
       title: 'Invigilator Assessment Hub',
-      footer: 'Invigilator Assessment Hub ©2024 - Built with React & Ant Design',
+              footer: 'Invigilator Assessment Hub ©2025 - Built with React & Ant Design',
       
       // Welcome Section
       welcome: {
@@ -98,7 +98,7 @@ const resources = {
     translation: {
       // Navigation & Layout
       title: 'مركز تقييم المراقبين',
-      footer: 'مركز تقييم المراقبين ©2024 - مبني باستخدام React و Ant Design',
+              footer: 'مركز تقييم المراقبين ©2025 - مبني باستخدام React و Ant Design',
       
       // Welcome Section
       welcome: {

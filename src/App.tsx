@@ -97,7 +97,7 @@ function App() {
           background: '#f0f2f5',
           color: 'rgba(0, 0, 0, 0.65)'
         }}>
-          Invigilator Assessment Hub ©2024 Created with React & Ant Design
+          Invigilator Assessment Hub ©2025 Created with React & Ant Design
         </Footer>
       </Layout>
 

@@ -1,122 +1,87 @@
-# Deployment Guide - Vercel + GitHub Actions
+# Deployment Notes
 
-This guide will help you deploy the Invigilator Assessment Hub to Vercel with automatic CI/CD using GitHub Actions.
+Just some notes on how I deployed this React app to Vercel. Pretty straightforward once you get it working.
 
-## 🚀 Quick Deployment Steps
+## Quick setup
 
-### 1. Prepare Your Repository
+The easiest way is to just connect your GitHub repo to Vercel:
 
-Make sure your code is pushed to GitHub:
+1. Go to vercel.com and sign in with GitHub
+2. Click "Add New Project" and import your repo
+3. Vercel automatically detects it's a Vite project, so just hit Deploy
+4. That's it - you get a live URL
+
+## If you want to use the CLI instead
+
 ```bash
-git add .
-git commit -m "Add deployment configuration"
-git push origin main
-```
-
-### 2. Deploy to Vercel
-
-#### Option A: Automatic (Recommended)
-1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
-2. Click "Add New Project"
-3. Import your repository
-4. Vercel will automatically detect it's a Vite project
-5. Click "Deploy"
-
-#### Option B: Manual via CLI
-```bash
-# Install Vercel CLI
 npm i -g vercel
-
-# Login to Vercel
 vercel login
-
-# Deploy
 vercel --prod
 ```
 
-### 3. Set Up GitHub Actions (Optional but Recommended)
+I had some issues initially with the build failing, but it was just missing React imports. Fixed that and it deployed fine.
 
-For automatic deployments on every push, you'll need to add these secrets to your GitHub repository:
+## GitHub Actions setup (optional)
 
-1. Go to your GitHub repo → Settings → Secrets and variables → Actions
-2. Add these secrets:
+I set up auto-deployments so it redeploys whenever I push to main. If you want that:
 
-```
-VERCEL_TOKEN: Your Vercel token (get from vercel.com/account/tokens)
-ORG_ID: Your Vercel team/org ID (get from vercel.com/teams/settings)
-PROJECT_ID: Your project ID (get from vercel project settings)
-VERCEL_ORG_ID: Same as ORG_ID (legacy compatibility)
-```
+1. Go to your repo Settings → Secrets and variables → Actions
+2. Add these secrets (get them from Vercel):
+   - `VERCEL_TOKEN` - from vercel.com/account/tokens
+   - `ORG_ID` - from your Vercel team settings
+   - `PROJECT_ID` - from your project settings
+   - `VERCEL_ORG_ID` - same as ORG_ID
 
-### 4. How to Get Vercel IDs
+The workflow file is already in `.github/workflows/ci-cd.yml` so it should just work.
 
-```bash
-# Install Vercel CLI
-npm i -g vercel
+## Configuration files
 
-# Login and link project
-vercel login
-vercel link
+- `vercel.json` - tells Vercel how to build and route the app
+- `.vercelignore` - excludes test files and docs from deployment
+- The GitHub Actions workflow runs tests before deploying
 
-# Get project info
-vercel env ls
-```
+## Troubleshooting stuff I ran into
 
-The `.vercel/project.json` file will contain your `orgId` and `projectId`.
+**Build failures:**
+- Make sure React is imported in your main files (App.tsx, main.tsx)
+- Test the build locally first: `npm run build`
 
-## 📁 Configuration Files
+**Routing issues:**
+- The vercel.json handles SPA routing so refreshing pages works
 
-- **`vercel.json`** - Vercel deployment configuration
-- **`.github/workflows/ci-cd.yml`** - GitHub Actions pipeline
-- **`.vercelignore`** - Files to exclude from deployment
+**Large bundle warning:**
+- It complains about bundle size but it's fine for this project (1.26MB)
+- Could add code splitting later if needed
 
-## 🔄 Deployment Workflow
+## Environment variables
 
-1. **Push to `dev` branch** → Runs tests and builds
-2. **Create Pull Request to `main`** → Deploys preview environment
-3. **Merge to `main`** → Deploys to production
-
-## 🌍 Environment Variables
-
-If you need environment variables:
-
-1. Add them in Vercel dashboard → Project Settings → Environment Variables
-2. For local development, create `.env.local`:
+If you need env vars, add them in the Vercel dashboard under Project Settings. For local dev, create a `.env.local` file:
 
 ```env
 VITE_API_URL=http://localhost:3000
 VITE_ENVIRONMENT=development
 ```
 
-## ✅ Verification
+## Testing the deployment
 
-After deployment:
-- ✅ Check your app loads at the Vercel URL
-- ✅ Verify routing works (try refreshing on different pages)
-- ✅ Test all features work in production
-- ✅ Check GitHub Actions are running on new commits
+After deploying, check:
+- App loads properly
+- Navigation works (especially page refreshes)
+- All features work the same as local
+- No console errors
 
-## 🐛 Troubleshooting
+## My deployment workflow
 
-**Build fails?**
-```bash
-# Test locally first
-npm run build
-npm run preview
-```
+1. Push changes to main branch
+2. GitHub Actions automatically runs tests
+3. If tests pass, deploys to Vercel
+4. Get a new deployment URL
 
-**Routing issues?**
-- The `vercel.json` handles SPA routing automatically
+For pull requests, it creates preview deployments which is pretty cool.
 
-**Large bundle warning?**
-- Consider code splitting if needed (the warning is just informational)
+## Links
 
-## 📊 Performance
+- Live app: https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app
+- Vercel dashboard: https://vercel.com/yehualashets-projects/invigilator-assessment-hub
 
-Current build size: ~1.26MB (395KB gzipped)
-- This is acceptable for a React app with Ant Design
-- Consider dynamic imports for further optimization if needed
-
----
-
-**Your app should now be live! 🎉** 
+The whole setup took maybe 15 minutes once I figured out the React import issue. 

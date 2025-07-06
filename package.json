@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "deploy": "npm run build && vercel --prod"
   },
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",

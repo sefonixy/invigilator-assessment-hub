@@ -1,69 +1,169 @@
-# React + TypeScript + Vite
+# 🎓 Invigilator Assessment Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React-based dashboard for managing and monitoring assessment examinations. Built with TypeScript, Ant Design, and deployed on Vercel.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**🚀 [View Live Application](https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app)**
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Assessment Management** - View and manage downloaded assessments
+- **Real-time Monitoring** - Track student submissions and session status
+- **Advanced Filtering** - Filter by area, program, course, and status
+- **Student Details** - View detailed information about examinees
+- **Action Controls** - Monitor examinees, sync submissions, and manage sessions
+- **Responsive Design** - Works seamlessly on desktop and mobile devices
+- **Accessibility** - Built with screen reader support and keyboard navigation
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Frontend
+- **[React 19](https://react.dev/)** - Modern UI library with latest features
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
+- **[Ant Design 5](https://ant.design/)** - Enterprise-class UI design language
+- **[React Router 7](https://reactrouter.com/)** - Declarative routing
+- **[Vite 7](https://vitejs.dev/)** - Fast build tool and dev server
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Development & Testing
+- **[Jest](https://jestjs.io/)** - JavaScript testing framework
+- **[React Testing Library](https://testing-library.com/react)** - Simple and complete testing utilities
+- **[ESLint](https://eslint.org/)** - JavaScript linter
+- **[TypeScript ESLint](https://typescript-eslint.io/)** - TypeScript-specific linting rules
+
+### Deployment & CI/CD
+- **[Vercel](https://vercel.com/)** - Zero-config deployment platform
+- **[GitHub Actions](https://github.com/features/actions)** - Automated CI/CD pipeline
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** (version 18 or higher)
+- **npm** or **yarn**
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/sefonixy/invigilator-assessment-hub.git
+   cd invigilator-assessment-hub
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser**
+   ```
+   http://localhost:5173
+   ```
+
+## 📜 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run test suite |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Run tests with coverage report |
+| `npm run deploy` | Build and deploy to Vercel |
+
+## 🧪 Testing
+
+The project includes comprehensive test coverage:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Current test coverage:** 25 tests across 3 test suites covering:
+- Component rendering and interaction
+- Filter and search logic
+- Error handling utilities
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🏗️ Project Structure
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/          # React components
+│   ├── assessments/     # Assessment-related components
+│   └── submissions/     # Submission-related components
+├── contexts/            # React contexts
+├── hooks/               # Custom React hooks
+├── services/            # API services and mock data
+├── types/               # TypeScript type definitions
+├── utils/               # Utility functions
+└── constants/           # App constants and themes
+```
+
+## 📚 Documentation
+
+- **[Data Layer Documentation](./docs/data-layer-readme.md)** - Detailed information about data structures, state management, and API integration
+- **[Deployment Guide](./DEPLOYMENT.md)** - Step-by-step deployment instructions for Vercel and GitHub Actions
+
+## 🔧 Development
+
+### Code Style
+
+This project follows strict TypeScript and React best practices:
+- **Strict TypeScript** configuration with comprehensive type checking
+- **ESLint** with React-specific rules
+- **Functional components** with hooks
+- **Accessibility-first** design principles
+
+### Performance
+
+- **Lazy loading** for optimal bundle splitting
+- **Memoization** for expensive calculations
+- **Efficient re-renders** with proper dependency arrays
+- **Optimized builds** with Vite's fast bundling
+
+## 🚀 Deployment
+
+The application is automatically deployed to Vercel with:
+
+- **Automatic deployments** on every push to `main` branch
+- **Preview deployments** for pull requests
+- **Custom domain** support
+- **Environment variable** management
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🔗 Links
+
+- **[Live Application](https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app)**
+- **[GitHub Repository](https://github.com/sefonixy/invigilator-assessment-hub)**
+- **[Vercel Dashboard](https://vercel.com/yehualashets-projects/invigilator-assessment-hub)**
+
+---
+
+**Built with ❤️ using React, TypeScript, and Ant Design**

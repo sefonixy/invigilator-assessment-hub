@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import AssessmentTable from '../AssessmentTable';
 import type { Assessment } from '../../../types/data';
 
-// Mock data for testing
 const mockAssessments: Assessment[] = [
   {
     id: 'ASMT001',
@@ -63,7 +62,6 @@ describe('<AssessmentTable /> - Basic Tests', () => {
   test('should render table with assessment data', () => {
     render(<AssessmentTable {...defaultProps} />);
     
-    // Check that assessments are displayed
     expect(screen.getByText('General Science Exam - Nov ACU')).toBeInTheDocument();
     expect(screen.getByText('Mathematics Final')).toBeInTheDocument();
     expect(screen.getByText('(Central)')).toBeInTheDocument();
@@ -79,18 +77,16 @@ describe('<AssessmentTable /> - Basic Tests', () => {
     const mockOnAction = jest.fn();
     render(<AssessmentTable {...defaultProps} onAction={mockOnAction} />);
     
-    // Find and click the monitor button
     const monitorButton = screen.getByRole('button', { name: /user 1/i });
     fireEvent.click(monitorButton);
     
     expect(mockOnAction).toHaveBeenCalledWith('monitor_examinees', mockAssessments[0]);
   });
 
-  test('should show loading state', () => {
+    test('should show loading state', () => {
     render(<AssessmentTable {...defaultProps} loading={true} />);
     
-         // Check that table container exists (loading is handled by Ant Design internally)
-     const table = document.querySelector('.ant-table-wrapper');
+    const table = document.querySelector('.ant-table-wrapper');
      expect(table).toBeInTheDocument();
    });
  }); 

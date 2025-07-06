@@ -196,7 +196,6 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
       key: 'timeElapsed',
       align: 'center' as const,
       sorter: (a: Examinee, b: Examinee) => {
-        // Convert time strings to minutes for sorting
         const timeToMinutes = (timeStr: string) => {
           if (timeStr === '-' || timeStr === 'N/A') return -1;
           

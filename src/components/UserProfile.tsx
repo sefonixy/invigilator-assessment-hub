@@ -14,7 +14,6 @@ import {
 import ProfileModal from './ProfileModal';
 import { useAppContext } from '../hooks/useAppContext';
 
-// Demo profile data - in a real app, this would come from your state management
 const defaultProfileData = {
   firstName: 'John',
   lastName: 'Doe',

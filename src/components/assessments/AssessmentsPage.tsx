@@ -54,36 +54,29 @@ const AssessmentsPage: React.FC = () => {
     loadAssessmentsData();
   }, []);
 
-  // Get all assessments data
   const allAssessments = useMemo(() => {
     return assessmentsData;
   }, [assessmentsData]);
 
-  // Apply filters to assessments
   const filteredAssessments = useMemo(() => {
     let result = [...allAssessments];
 
-    // Apply area filter
     if (filters.areaName) {
       result = result.filter(assessment => assessment.areaName === filters.areaName);
     }
 
-    // Apply program filter
     if (filters.program) {
       result = result.filter(assessment => assessment.program === filters.program);
     }
 
-    // Apply course filter
     if (filters.course) {
       result = result.filter(assessment => assessment.course === filters.course);
     }
 
-    // Apply status filter
     if (filters.status) {
       result = result.filter(assessment => assessment.assessmentStatus === filters.status);
     }
 
-    // Apply search term filter
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
       result = result.filter(assessment => 
@@ -97,17 +90,13 @@ const AssessmentsPage: React.FC = () => {
     return result;
   }, [allAssessments, filters]);
 
-  // Handle filter changes
   const handleFiltersChange = useCallback((newFilters: Partial<AssessmentFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
   }, []);
 
-  // Clear all filters
   const handleClearFilters = useCallback(() => {
     setFilters({});
   }, []);
-
-  // Handle assessment actions
   const handleAction = useCallback((action: string, assessment: Assessment) => {
     switch (action) {
       case 'monitor_examinees':

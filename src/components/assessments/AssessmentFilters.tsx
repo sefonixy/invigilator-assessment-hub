@@ -31,7 +31,6 @@ const AssessmentFilters: React.FC<AssessmentFiltersProps> = ({
   loading = false
 }) => {
 
-  // Extract unique values from assessments
   const { areas, programs, courses, statuses } = useMemo(() => {
     const areas = [...new Set(assessments.map(a => a.areaName))];
     const programs = [...new Set(assessments.map(a => a.program))];

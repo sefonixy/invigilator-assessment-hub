@@ -1,13 +1,5 @@
 import type { Assessment, Examinee } from '../types/data';
 
-/**
- * Date sorting comparator for assessments
- * @param a - First assessment
- * @param b - Second assessment
- * @param dateField - Date field to sort by ('assessmentStartDate' or 'assessmentEndDate')
- * @param order - Sort order ('asc' or 'desc')
- * @returns Comparison result
- */
 export const sortAssessmentsByDate = (
   a: Assessment, 
   b: Assessment, 
@@ -21,14 +13,6 @@ export const sortAssessmentsByDate = (
   return order === 'desc' ? -result : result;
 };
 
-/**
- * Text sorting comparator for assessments
- * @param a - First assessment
- * @param b - Second assessment
- * @param textField - Text field to sort by
- * @param order - Sort order ('asc' or 'desc')
- * @returns Comparison result
- */
 export const sortAssessmentsByText = (
   a: Assessment, 
   b: Assessment, 
@@ -39,13 +23,6 @@ export const sortAssessmentsByText = (
   return order === 'desc' ? -result : result;
 };
 
-/**
- * Status sorting comparator for examinees
- * @param a - First examinee
- * @param b - Second examinee
- * @param order - Sort order ('asc' or 'desc')
- * @returns Comparison result
- */
 export const sortExamineesByStatus = (
   a: Examinee, 
   b: Examinee, 
@@ -55,25 +32,16 @@ export const sortExamineesByStatus = (
   return order === 'desc' ? -result : result;
 };
 
-/**
- * Time elapsed sorting comparator for examinees
- * @param a - First examinee
- * @param b - Second examinee
- * @param order - Sort order ('asc' or 'desc')
- * @returns Comparison result
- */
 export const sortExamineesByTimeElapsed = (
   a: Examinee, 
   b: Examinee, 
   order: 'asc' | 'desc' = 'asc'
 ): number => {
-  // Convert time strings to minutes for sorting
   const timeToMinutes = (timeStr: string): number => {
     if (timeStr === '-' || timeStr === 'N/A') return -1;
     
     let totalMinutes = 0;
     
-    // Handle new format: "41 secs", "1 min, 31 secs", "2 hr, 15 min"
     const hrMatch = timeStr.match(/(\d+)\s*hr/);
     const minMatch = timeStr.match(/(\d+)\s*min/);
     const secMatch = timeStr.match(/(\d+)\s*secs?/);
@@ -89,14 +57,6 @@ export const sortExamineesByTimeElapsed = (
   return order === 'desc' ? -result : result;
 };
 
-/**
- * Numeric sorting comparator for examinees
- * @param a - First examinee
- * @param b - Second examinee
- * @param numericField - Numeric field to sort by
- * @param order - Sort order ('asc' or 'desc')
- * @returns Comparison result
- */
 export const sortExamineesByNumeric = (
   a: Examinee, 
   b: Examinee, 
@@ -107,14 +67,6 @@ export const sortExamineesByNumeric = (
   return order === 'desc' ? -result : result;
 };
 
-/**
- * Text sorting comparator for examinees
- * @param a - First examinee
- * @param b - Second examinee
- * @param textField - Text field to sort by
- * @param order - Sort order ('asc' or 'desc')
- * @returns Comparison result
- */
 export const sortExamineesByText = (
   a: Examinee, 
   b: Examinee, 

@@ -1,6 +1,4 @@
-// Central theme configuration file
 export const THEME_CONSTANTS = {
-  // Color Palette
   colors: {
     primary: '#1890ff',
     primaryHover: '#40a9ff',
@@ -10,11 +8,9 @@ export const THEME_CONSTANTS = {
     error: '#ff4d4f',
     info: '#1890ff',
     
-    // Neutral colors
     white: '#ffffff',
     black: '#000000',
     
-    // Light theme colors
     light: {
       background: '#f0f2f5',
       backgroundElevated: '#ffffff',
@@ -29,7 +25,6 @@ export const THEME_CONSTANTS = {
       sider: '#ffffff'
     },
     
-    // Dark theme colors
     dark: {
       background: '#141414',
       backgroundElevated: '#1f1f1f',
@@ -45,7 +40,6 @@ export const THEME_CONSTANTS = {
     }
   },
   
-  // Typography
   fonts: {
     primary: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     code: '"Fira Code", "SF Mono", Monaco, Menlo, "Ubuntu Mono", monospace',
@@ -68,7 +62,6 @@ export const THEME_CONSTANTS = {
     }
   },
   
-  // Spacing & Layout
   spacing: {
     xs: 4,
     sm: 8,
@@ -79,7 +72,6 @@ export const THEME_CONSTANTS = {
     '3xl': 64
   },
   
-  // Border Radius
   borderRadius: {
     sm: 4,
     base: 6,
@@ -89,7 +81,6 @@ export const THEME_CONSTANTS = {
     full: 9999
   },
   
-  // Shadows
   shadows: {
     sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
     base: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -98,7 +89,6 @@ export const THEME_CONSTANTS = {
     xl: '0 20px 25px rgba(0, 0, 0, 0.1)'
   },
   
-  // Compact mode adjustments
   compact: {
     padding: {
       xs: 2,
@@ -117,7 +107,6 @@ export const THEME_CONSTANTS = {
     }
   },
   
-  // Component specific sizes
   components: {
     header: {
       height: 64,
@@ -137,7 +126,6 @@ export const THEME_CONSTANTS = {
     }
   },
   
-  // Z-index scale
   zIndex: {
     dropdown: 1000,
     sticky: 1020,

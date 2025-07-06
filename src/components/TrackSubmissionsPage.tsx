@@ -83,7 +83,6 @@ const TrackSubmissionsPage: React.FC = () => {
     
     let filtered = [...assessment.examinees];
     
-    // Apply filters
     if (newFilters.examSessionStatus && newFilters.examSessionStatus !== 'All') {
       switch (newFilters.examSessionStatus) {
         case 'Active':
@@ -101,7 +100,6 @@ const TrackSubmissionsPage: React.FC = () => {
       }
     }
     
-    // Apply group filter (TreeSelect value)
     if (newFilters.groupName) {
       filtered = filtered.filter(e => e.groupName === newFilters.groupName);
     }
@@ -152,17 +150,14 @@ const TrackSubmissionsPage: React.FC = () => {
         });
         break;
       case 'resetTimer':
-        // Direct action without modal
         message.success(`Session timer reset for ${examinee.fullName}`);
         // TODO: Implement actual reset timer logic
         break;
       case 'resume':
-        // Direct action without modal
         message.info(`Resuming session for ${examinee.fullName}`);
         // TODO: Implement actual resume logic
         break;
       case 'start':
-        // Direct action without modal
         message.info(`Starting exam session for ${examinee.fullName}`);
         // TODO: Implement actual start logic
         break;

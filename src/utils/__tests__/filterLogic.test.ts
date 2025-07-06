@@ -1,7 +1,6 @@
 import { filterAssessments, type AssessmentFilters } from '../filterLogic';
 import type { Assessment } from '../../types/data';
 
-// Mock assessment data for testing
 const mockAssessments: Assessment[] = [
   {
     id: 'ASMT001',

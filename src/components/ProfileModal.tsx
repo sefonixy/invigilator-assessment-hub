@@ -3,7 +3,6 @@ import {
   Modal,
   Form,
   Input,
-  Select,
   Divider,
   Typography,
   Avatar,
@@ -40,15 +39,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   profileData
 }) => {
   const { t } = useTranslation();
-  const [form] = Form.useForm();
-
-  // Role options
-  const roleOptions = [
-    { label: t('profile.roles.admin'), value: 'admin' },
-    { label: t('profile.roles.invigilator'), value: 'invigilator' },
-    { label: t('profile.roles.supervisor'), value: 'supervisor' },
-    { label: t('profile.roles.coordinator'), value: 'coordinator' }
-  ];
 
   const getInitials = () => {
     const first = profileData.firstName?.[0] || '';
@@ -80,7 +70,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         </div>
 
         <Form
-          form={form}
           layout="vertical"
           initialValues={profileData}
           disabled={true}
@@ -145,10 +134,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
                 label={t('profile.role')}
                 name="role"
               >
-                <Select 
-                  options={roleOptions}
-                  placeholder="Select a role"
-                />
+                <Input placeholder="Role" />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>

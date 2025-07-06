@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Invigilator Assessment Hub uses a unified, hierarchical data structure that serves as the single source of truth for the entire application. This document provides a comprehensive guide to understanding the data layer architecture, types, and implementation.
+This doc explains how the data layer works - the types, structure, and how to use it.
 
 ## Table of Contents
 
@@ -11,7 +11,6 @@ The Invigilator Assessment Hub uses a unified, hierarchical data structure that 
 - [Data Structure](#data-structure)
 - [Mock Data Implementation](#mock-data-implementation)
 - [Data Flow](#data-flow)
-- [Usage Examples](#usage-examples)
 - [Edge Cases & Testing](#edge-cases--testing)
 
 ## Architecture Overview
@@ -28,38 +27,28 @@ Assessment (Top Level)
     └── Modal Popup Data
 ```
 
-### Key Principles
+### Notes
 
-1. **Single Source of Truth**: All assessment and examinee data is contained within the `Assessment[]` array
-2. **Nested Structure**: Examinees belong to assessments, maintaining referential integrity
-3. **Complete Data**: Each examinee object contains ALL required data for both table and modal views
-4. **Type Safety**: Strict TypeScript interfaces ensure data consistency
+1. **Single Source**: All data lives in the `Assessment[]` array
+2. **Nested**: Students belong to assessments
+3. **Complete**: Each student has everything needed for table and modal
 
 ## TypeScript Interfaces
 
 ### Assessment Status Types
 
 ```typescript
-/**
- * Defines the possible statuses for an assessment.
- * As seen in the "Exam Status" filter in the video.
- */
+// Assessment statuses from the exam filter
 export type AssessmentStatus = 'Ongoing' | 'Not Started' | 'Finished' | 'Closed';
 
-/**
- * Defines the possible statuses for an examinee's session.
- * As seen in the "Filter by Status" dropdown in the video.
- */
+// Student session statuses
 export type ExamineeStatus = 'Student Submission' | 'Pending' | 'Auto Locked' | 'Absent' | 'Moved to Paper' | 'Not Started';
 ```
 
 ### Log Entry Interface
 
 ```typescript
-/**
- * Defines a single entry in an examinee's activity log.
- * As seen in the modal popup in the video.
- */
+// Activity log entry for the student details modal
 export interface LogEntry {
   timestamp: string;
   activity: 'Login' | 'Logout' | 'Submission' | 'Warning' | 'Action';
@@ -70,28 +59,25 @@ export interface LogEntry {
 ### Examinee Interface
 
 ```typescript
-/**
- * Represents a single examinee, containing ALL data for both the table and the modal view.
- * This ensures a single, consistent object for each student.
- */
+// Student data - contains everything for both table and modal views
 export interface Examinee {
-  // Core identification
-  id: string; // e.g., "SA-010"
+  // Basic info
+  id: string; // "SA-010"
   username: string;
   fullName: string;
   
-  // Data for the "Track Submissions" table view
+  // Table data
   login: boolean;
   start: boolean;
   questionsSynced: number;
   timeElapsed: string;
-  status: ExamineeStatus; // The current status of the examinee's session
+  status: ExamineeStatus;
 
-  // Detailed data for the modal popup view
-  groupName: string; // e.g., "9A"
-  platform: string; // e.g., "Android"
-  ipAddress: string; // e.g., "192.168.1.1"
-  sessionHealth: string; // e.g., "Average normal session"
+  // Modal details
+  groupName: string; // "9A"
+  platform: string; // "Android"
+  ipAddress: string; // "192.168.1.1"
+  sessionHealth: string; // "Good", "Needs Attention"
   activityTimeline: LogEntry[];
 }
 ```
@@ -99,20 +85,18 @@ export interface Examinee {
 ### Assessment Interface
 
 ```typescript
-/**
- * Represents the top-level Assessment object, our single source of truth.
- */
+// Main assessment object with all student data
 export interface Assessment {
   id: string;
-  areaName: string; // e.g., "(Central)"
-  assessmentName: string; // e.g., "General Science Exam - Nov ACU"
-  program: string; // e.g., "Mixed Subjects"
-  course: string; // e.g., "Grade 6"
+  areaName: string; // "(Central)"
+  assessmentName: string; // "General Science Exam - Nov ACU"
+  program: string; // "Mixed Subjects"
+  course: string; // "Grade 6"
   assessmentStartDate: string;
   assessmentEndDate: string;
   assessmentStatus: AssessmentStatus;
   
-  // The nested array of all examinees for this assessment
+  // All students for this exam
   examinees: Examinee[];
 }
 ```
@@ -162,34 +146,26 @@ Not Started → Student Submission → Pending
 The mock data includes 6 comprehensive test assessments:
 
 1. **ASMT001**: "General Science Exam - Nov ACU" (Not Started)
-   - 8 examinees with all possible statuses
-   - Central campus location
-   - Mixed grade levels (9A, 9B, 9C)
+   - 8 students with all status types
+   - Central campus, mixed grades
 
 2. **ASMT002**: "Random exam- normal -campus" (Ongoing)
-   - 4 examinees in various states
-   - Active examination scenario
-   - Different platforms and devices
+   - 4 students, active exam
+   - Different devices
 
 3. **ASMT003**: "May 2025 media test for ACU exam" (Finished)
-   - Completed examination
-   - Mix of successful and absent students
-   - Historical data example
+   - Completed exam
+   - Mix of submitted and absent
 
 4. **ASMT004**: "English Literature Final" (Closed)
-   - North campus location
-   - Grade 8 students
-   - Post-examination state
+   - North campus, Grade 8
 
 5. **ASMT005**: "Mathematics Advanced Placement" (Ongoing)
-   - South campus
-   - Grade 12 advanced students
-   - Single examinee scenario
+   - South campus, Grade 12
+   - Single student
 
 6. **ASMT006**: "Physics Lab Practical Exam" (Not Started)
-   - East campus
-   - Grade 11 students
-   - Future examination
+   - East campus, Grade 11
 
 ### Sample Examinee Data
 
@@ -197,7 +173,7 @@ The mock data includes 6 comprehensive test assessments:
 {
   id: 'SA-010',
   username: 'student.one',
-  fullName: 'abd el rahman farag',
+  fullName: 'abebe kibret',
   login: true,
   start: true,
   questionsSynced: 13,
@@ -221,11 +197,11 @@ The mock data includes 6 comprehensive test assessments:
 
 ### Application Flow
 
-1. **Data Loading**: Mock data is imported from `src/services/mockData.ts`
-2. **Assessment List**: Displayed in `AssessmentsPage` with calculated examinee counts
-3. **Assessment Selection**: User clicks "Monitor Examinees" to view submissions
-4. **Examinee Table**: Shows all examinees for selected assessment
-5. **Examinee Details**: Modal popup shows detailed information and activity timeline
+1. **Data Loading**: Mock data from `src/services/mockData.ts`
+2. **Assessment List**: Shows in `AssessmentsPage` with student counts
+3. **Assessment Selection**: Click "Monitor Examinees" to view submissions
+4. **Student Table**: Shows all students for selected exam
+5. **Student Details**: Modal shows detailed info and activity log
 
 ### Component Data Usage
 
@@ -262,62 +238,6 @@ const filteredExaminees = examinees.filter(e => {
 });
 ```
 
-## Usage Examples
-
-### Getting Assessment Data
-
-```typescript
-import { mockAssessmentsData } from '../services/mockData';
-
-// Get all assessments
-const assessments = mockAssessmentsData;
-
-// Get specific assessment
-const assessment = mockAssessmentsData.find(a => a.id === 'ASMT001');
-
-// Get examinee count
-const count = assessment?.examinees.length || 0;
-```
-
-### Filtering Examinees
-
-```typescript
-// Filter by status
-const submittedExaminees = assessment.examinees.filter(
-  e => e.status === 'Student Submission'
-);
-
-// Filter by group
-const group9A = assessment.examinees.filter(
-  e => e.groupName === '9A'
-);
-
-// Search by name or username
-const searchResults = assessment.examinees.filter(e =>
-  e.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  e.username.toLowerCase().includes(searchTerm.toLowerCase())
-);
-```
-
-### Rendering Dynamic Actions
-
-```typescript
-const renderActionButton = (examinee: Examinee) => {
-  switch (examinee.status) {
-    case 'Absent':
-      return <Button onClick={() => switchToPaper(examinee)}>Switch to Paper</Button>;
-    case 'Auto Locked':
-      return <Button onClick={() => unlockSession(examinee)}>Unlock Session</Button>;
-    case 'Not Started':
-      return <Button onClick={() => startExam(examinee)}>Start</Button>;
-    case 'Student Submission':
-      return <ActionsDropdown examinee={examinee} />;
-    default:
-      return <Button onClick={() => viewDetails(examinee)}>View Details</Button>;
-  }
-};
-```
-
 ## Edge Cases & Testing
 
 ### Status Coverage
@@ -330,19 +250,19 @@ The mock data includes comprehensive coverage of all possible scenarios:
 - ✅ **Session Health States**: Good, Excellent, Needs Attention, Average normal session, N/A
 - ✅ **Time Formats**: "41 secs", "1 min, 31 secs", "2 hr, 15 min", "-"
 
-### Edge Case Scenarios
+### Edge Cases
 
-1. **Zero Examinees**: Some assessments may have no enrolled students
-2. **Single Examinee**: Assessments with only one student
-3. **Large Groups**: Assessments with many examinees for performance testing
-4. **Mixed Statuses**: Single assessment with examinees in all possible states
-5. **Network Issues**: Examinees with connectivity problems
-6. **Device Variety**: Different platforms and technical setups
+1. **Zero Students**: Some exams have no enrolled students
+2. **Single Student**: Exams with just one student
+3. **Large Groups**: Many students for performance testing
+4. **Mixed Statuses**: All status types in one exam
+5. **Network Issues**: Students with connection problems
+6. **Device Variety**: Different platforms and setups
 
 ### Data Validation
 
 ```typescript
-// Validate assessment structure
+// Check if assessment has required fields
 const validateAssessment = (assessment: Assessment): boolean => {
   return !!(
     assessment.id &&
@@ -352,7 +272,7 @@ const validateAssessment = (assessment: Assessment): boolean => {
   );
 };
 
-// Validate examinee data
+// Check if student has required fields
 const validateExaminee = (examinee: Examinee): boolean => {
   return !!(
     examinee.id &&
@@ -372,16 +292,3 @@ const validateExaminee = (examinee: Examinee): boolean => {
 - **Assessment Table**: `src/components/assessments/AssessmentTable.tsx`
 - **Submissions Table**: `src/components/submissions/SubmissionsTable.tsx`
 - **Track Submissions**: `src/components/TrackSubmissionsPage.tsx`
-
-## Benefits of This Architecture
-
-1. **Maintainability**: Single source of truth eliminates data inconsistencies
-2. **Type Safety**: TypeScript interfaces prevent runtime errors
-3. **Scalability**: Hierarchical structure supports complex organizational needs
-4. **Testability**: Comprehensive mock data enables thorough testing
-5. **Performance**: Efficient filtering and sorting with proper data structure
-6. **Flexibility**: Easy to extend with new fields or status types
-
----
-
-*This documentation reflects the current implementation as of the latest data layer update. For technical questions or clarifications, refer to the TypeScript interfaces in the codebase.* 

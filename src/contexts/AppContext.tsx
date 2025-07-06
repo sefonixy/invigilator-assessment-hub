@@ -12,11 +12,9 @@ interface AppProviderProps {
   children: ReactNode;
 }
 
-// Provider Component
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const { i18n } = useTranslation();
   
-  // State
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     const saved = localStorage.getItem('themeMode');
     return (saved as ThemeMode) || 'light';
@@ -37,21 +35,18 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const isCompact = compactMode === 'compact';
   const themeColors = getThemeColors(isDark);
 
-  // Enhanced theme configuration
   const themeConfig = {
     algorithm: [
       isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
       ...(isCompact ? [antdTheme.compactAlgorithm] : [])
     ],
     token: {
-      // Color tokens
       colorPrimary: THEME_CONSTANTS.colors.primary,
       colorSuccess: THEME_CONSTANTS.colors.success,
       colorWarning: THEME_CONSTANTS.colors.warning,
       colorError: THEME_CONSTANTS.colors.error,
       colorInfo: THEME_CONSTANTS.colors.info,
       
-      // Typography tokens
       fontFamily: THEME_CONSTANTS.fonts.primary,
       fontSize: isCompact ? 13 : 14,
       fontSizeHeading1: isCompact ? 28 : 32,
@@ -60,12 +55,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       fontSizeHeading4: isCompact ? 16 : 18,
       fontSizeHeading5: isCompact ? 14 : 16,
       
-      // Layout tokens
       borderRadius: THEME_CONSTANTS.borderRadius.base,
       borderRadiusLG: THEME_CONSTANTS.borderRadius.md,
       borderRadiusSM: THEME_CONSTANTS.borderRadius.sm,
-      
-      // Spacing tokens
       padding: isCompact ? THEME_CONSTANTS.compact.padding.md : THEME_CONSTANTS.spacing.md,
       paddingLG: isCompact ? THEME_CONSTANTS.compact.padding.lg : THEME_CONSTANTS.spacing.lg,
       paddingSM: isCompact ? THEME_CONSTANTS.compact.padding.sm : THEME_CONSTANTS.spacing.sm,

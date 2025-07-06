@@ -30,7 +30,6 @@ const SubmissionsFilter: React.FC<SubmissionsFilterProps> = ({
     });
   };
 
-  // Convert imported mock data to TreeSelect format
   const treeData: TreeSelectProps['treeData'] = mockGroupsData.map(campus => ({
     ...campus,
     key: campus.value,

@@ -1,169 +1,146 @@
-# 🎓 Invigilator Assessment Hub
+# Invigilator Assessment Hub
 
-A modern React-based dashboard for managing and monitoring assessment examinations. Built with TypeScript, Ant Design, and deployed on Vercel.
+A React dashboard for managing assessment examinations and monitoring student submissions. This was built as part of a React.js assessment project.
 
-## 🌐 Live Demo
+## Live Demo
 
-**🚀 [View Live Application](https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app)**
+Check out the deployed app: https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app
 
-## ✨ Features
+## What it does
 
-- **Assessment Management** - View and manage downloaded assessments
-- **Real-time Monitoring** - Track student submissions and session status
-- **Advanced Filtering** - Filter by area, program, course, and status
-- **Student Details** - View detailed information about examinees
-- **Action Controls** - Monitor examinees, sync submissions, and manage sessions
-- **Responsive Design** - Works seamlessly on desktop and mobile devices
-- **Accessibility** - Built with screen reader support and keyboard navigation
+This app helps invigilators (exam supervisors) manage their assessments and monitor students during exams. You can:
 
-## 🛠️ Tech Stack
+- View downloaded assessments in a filterable table
+- Monitor student exam sessions in real-time  
+- Track submission status and session health
+- View detailed student information
+- Perform actions like syncing submissions or unlocking sessions
+- Filter and search through large datasets
 
-### Frontend
-- **[React 19](https://react.dev/)** - Modern UI library with latest features
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Ant Design 5](https://ant.design/)** - Enterprise-class UI design language
-- **[React Router 7](https://reactrouter.com/)** - Declarative routing
-- **[Vite 7](https://vitejs.dev/)** - Fast build tool and dev server
+The UI is responsive so it works on both desktop and mobile.
 
-### Development & Testing
-- **[Jest](https://jestjs.io/)** - JavaScript testing framework
-- **[React Testing Library](https://testing-library.com/react)** - Simple and complete testing utilities
-- **[ESLint](https://eslint.org/)** - JavaScript linter
-- **[TypeScript ESLint](https://typescript-eslint.io/)** - TypeScript-specific linting rules
+## Built with
 
-### Deployment & CI/CD
-- **[Vercel](https://vercel.com/)** - Zero-config deployment platform
-- **[GitHub Actions](https://github.com/features/actions)** - Automated CI/CD pipeline
+**Frontend:**
+- React 19 with TypeScript
+- Ant Design for UI components
+- React Router for navigation
+- Vite for fast development and building
 
-## 🚀 Getting Started
+**Testing & Tools:**
+- Jest and React Testing Library for tests
+- ESLint for code quality
+- GitHub Actions for CI/CD
+- Vercel for hosting
 
-### Prerequisites
+## Getting started
 
-- **Node.js** (version 18 or higher)
-- **npm** or **yarn**
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/sefonixy/invigilator-assessment-hub.git
-   cd invigilator-assessment-hub
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   ```
-   http://localhost:5173
-   ```
-
-## 📜 Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint |
-| `npm test` | Run test suite |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run deploy` | Build and deploy to Vercel |
-
-## 🧪 Testing
-
-The project includes comprehensive test coverage:
+You'll need Node.js 18+ installed on your machine.
 
 ```bash
-# Run all tests
-npm test
+# Clone the repo
+git clone https://github.com/sefonixy/invigilator-assessment-hub.git
+cd invigilator-assessment-hub
 
-# Run tests in watch mode
-npm run test:watch
+# Install dependencies
+npm install
 
-# Generate coverage report
-npm run test:coverage
+# Start development server
+npm run dev
 ```
 
-**Current test coverage:** 25 tests across 3 test suites covering:
-- Component rendering and interaction
-- Filter and search logic
-- Error handling utilities
+The app should open at `http://localhost:5173`
 
-## 🏗️ Project Structure
+## Available commands
+
+```bash
+npm run dev          # Start dev server
+npm run build        # Build for production  
+npm run preview      # Preview production build
+npm run lint         # Check code with ESLint
+npm test             # Run tests
+npm run test:watch   # Run tests in watch mode
+npm run deploy       # Deploy to Vercel
+```
+
+## Project structure
 
 ```
 src/
-├── components/          # React components
-│   ├── assessments/     # Assessment-related components
-│   └── submissions/     # Submission-related components
-├── contexts/            # React contexts
-├── hooks/               # Custom React hooks
-├── services/            # API services and mock data
-├── types/               # TypeScript type definitions
-├── utils/               # Utility functions
-└── constants/           # App constants and themes
+├── components/
+│   ├── assessments/     # Assessment table and filters
+│   └── submissions/     # Student submission tracking
+├── contexts/            # React context for state
+├── services/            # Mock data (would be API calls in real app)
+├── types/               # TypeScript definitions
+├── utils/               # Helper functions and logic
+└── constants/           # Theme and constants
 ```
 
-## 📚 Documentation
+## Testing
 
-- **[Data Layer Documentation](./docs/data-layer-readme.md)** - Detailed information about data structures, state management, and API integration
-- **[Deployment Guide](./DEPLOYMENT.md)** - Step-by-step deployment instructions for Vercel and GitHub Actions
+The project has tests covering the main functionality:
 
-## 🔧 Development
+```bash
+npm test  # Run all tests (currently 25 tests)
+```
 
-### Code Style
+Tests cover:
+- Component rendering
+- Filter logic
+- Error handling
+- User interactions
 
-This project follows strict TypeScript and React best practices:
-- **Strict TypeScript** configuration with comprehensive type checking
-- **ESLint** with React-specific rules
-- **Functional components** with hooks
-- **Accessibility-first** design principles
+## Documentation
 
-### Performance
+- [Data Layer Details](./docs/data-layer-readme.md) - More details about the data structure and state management
+- [Deployment Guide](./DEPLOYMENT.md) - How to deploy this yourself
 
-- **Lazy loading** for optimal bundle splitting
-- **Memoization** for expensive calculations
-- **Efficient re-renders** with proper dependency arrays
-- **Optimized builds** with Vite's fast bundling
+## Development notes
 
-## 🚀 Deployment
+**Code quality:**
+- Using strict TypeScript configuration
+- ESLint with React rules
+- Functional components with hooks
+- Proper error handling and loading states
 
-The application is automatically deployed to Vercel with:
+**Performance considerations:**
+- Using React.memo and useMemo for optimizations
+- Efficient filtering and sorting logic
+- Lazy loading could be added for larger datasets
 
-- **Automatic deployments** on every push to `main` branch
-- **Preview deployments** for pull requests
-- **Custom domain** support
-- **Environment variable** management
+## Deployment
 
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+The app auto-deploys to Vercel when you push to the main branch. I set up GitHub Actions to run tests before deployment.
 
-## 🤝 Contributing
+If you want to deploy your own version:
+1. Fork this repo
+2. Connect it to Vercel
+3. Push changes to trigger deployments
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
-## 📝 License
+## Architecture decisions
 
-This project is licensed under the MIT License.
+I chose this tech stack because:
+- **React 19** - Latest features and better performance
+- **TypeScript** - Helps catch errors and improves developer experience  
+- **Ant Design** - Provides professional-looking components out of the box
+- **Vite** - Much faster than Create React App for development
 
-## 🔗 Links
+The app uses mock data currently, but it's structured so you could easily replace the mock service with real API calls.
 
-- **[Live Application](https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app)**
-- **[GitHub Repository](https://github.com/sefonixy/invigilator-assessment-hub)**
-- **[Vercel Dashboard](https://vercel.com/yehualashets-projects/invigilator-assessment-hub)**
+## Areas for improvement
 
----
+If I had more time, I would add:
+- More comprehensive error handling
+- Additional test coverage
+- Performance monitoring
+- Better loading states
 
-**Built with ❤️ using React, TypeScript, and Ant Design**
+## Links
+
+- [Live app](https://invigilator-assessment-q9rxg5ty7-yehualashets-projects.vercel.app)
+- [GitHub repo](https://github.com/sefonixy/invigilator-assessment-hub)
+
+Built with React, TypeScript, and Ant Design.

@@ -58,7 +58,7 @@ export async function withRetry<T>(
       lastError = error as Error;
       
       // Don't retry non-retryable errors
-      const apiError = error as any;
+      const apiError = error as ApiError;
       if (apiError.retryable === false) {
         throw error;
       }
@@ -79,9 +79,9 @@ export async function withRetry<T>(
 
 // Error classification helper
 export function classifyError(error: unknown): ApiError {
-  const apiError = error as any;
+  const apiError = error as Partial<ApiError>;
   if (apiError && apiError.code && typeof apiError.retryable === 'boolean') {
-    return apiError;
+    return apiError as ApiError;
   }
   
   if (error instanceof Error) {

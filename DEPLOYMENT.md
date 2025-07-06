@@ -21,18 +21,15 @@ vercel --prod
 
 I had some issues initially with the build failing, but it was just missing React imports. Fixed that and it deployed fine.
 
-## GitHub Actions setup (optional)
+## GitHub Actions setup
 
-I set up auto-deployments so it redeploys whenever I push to main. If you want that:
+The project has a simple CI workflow that runs tests and builds on every push. Vercel handles the actual deployment automatically when you push to main.
 
-1. Go to your repo Settings → Secrets and variables → Actions
-2. Add these secrets (get them from Vercel):
-   - `VERCEL_TOKEN` - from vercel.com/account/tokens
-   - `ORG_ID` - from your Vercel team settings
-   - `PROJECT_ID` - from your project settings
-   - `VERCEL_ORG_ID` - same as ORG_ID
-
-The workflow file is already in `.github/workflows/ci-cd.yml` so it should just work.
+The workflow runs:
+- ESLint for code quality
+- Jest tests
+- TypeScript compilation
+- Build verification
 
 ## Configuration files
 
@@ -73,11 +70,11 @@ After deploying, check:
 ## My deployment workflow
 
 1. Push changes to main branch
-2. GitHub Actions automatically runs tests
-3. If tests pass, deploys to Vercel
+2. GitHub Actions runs tests and build verification
+3. Vercel automatically deploys if everything passes
 4. Get a new deployment URL
 
-For pull requests, it creates preview deployments which is pretty cool.
+Simple and effective.
 
 ## Links
 

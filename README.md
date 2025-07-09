@@ -15,7 +15,7 @@ This app helps invigilators (exam supervisors) manage their assessments and moni
 - Track submission status and session health
 - View detailed student information
 - Perform actions like syncing submissions or unlocking sessions
-- Filter and search through large datasets
+- Filter and search through the data
 
 The UI is responsive so it works on both desktop and mobile.
 
